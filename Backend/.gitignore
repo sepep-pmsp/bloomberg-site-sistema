@@ -1,0 +1,4 @@
+# MongoDB data folder
+mongodb/data/
+node_modules/
+.env
