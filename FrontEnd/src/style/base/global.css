@@ -1,0 +1,30 @@
+@import "./reset.css";
+@import "../tokens/colors.css";
+@import "../tokens/fonts.css";
+@import "../tokens/typography.css";
+@import "../themes/default.theme.css";
+
+body {
+  font-family: var(--font-body);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+}
+
+/* Headings principais */
+h1, h2, h3 {
+  font-family: var(--font-heading-primary);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+/* Headings secundários */
+h4, h5, h6 {
+  font-family: var(--font-heading-secondary);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-normal);
+}
+
+/* Texto padrão */
+p, span, li, label, a {
+  font-family: var(--font-body);
+}

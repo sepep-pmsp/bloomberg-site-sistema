@@ -1,0 +1,39 @@
+:root {
+  /* Lime / Eco */
+  --lime-50:  #FAFEE6;
+  --lime-100: #ECFD9B;
+  --lime-300: #CEFA05;
+  --lime-500: #7C9603;
+  --lime-700: #3E4B02;
+  --lime-800: #151901;
+
+  /* Green (Primary) */
+  --green-50:  #EBFAED;
+  --green-100: #ADEBB7;
+  --green-300: #5BD770;
+  --green-400: #28A43D;
+  --green-450: #269B5F;
+  --green-500: #19663F;
+  --green-600: #196626;
+  --green-700: #0F3D17;
+  --green-800: #0A290F;
+  --green-900: #051408;
+
+  /* Teal */
+  --teal-50:  #EBFAF6;
+  --teal-100: #C2F0E3;
+  --teal-300: #85E0C6;
+  --teal-400: #48D1AA;
+  --teal-600: #248F70;
+  --teal-700: #0F3D30;
+  --teal-900: #051410;
+  
+
+  /* Accents */
+  --accent-lime: #DBFB46;
+  --accent-mint: #D8F3DC;
+}
+:root {
+  --color-primary: #174E36;
+  --color-primary-light: #D8F3DC;
+}

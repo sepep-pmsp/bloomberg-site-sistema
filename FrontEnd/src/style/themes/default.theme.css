@@ -1,0 +1,21 @@
+:root {
+  /* Backgrounds */
+  --bg-page: var(--green-50);
+  --bg-card: #ffffff;
+
+  /* Text */
+  --text-primary: var(--green-800);
+  --text-secondary: var(--green-600);
+  --text-muted: var(--green-500);
+
+  /* UI */
+  --primary: var(--green-500);
+  --primary-hover: var(--green-600);
+  --secondary: var(--teal-400);
+  --accent: var(--lime-300);
+
+  /* Charts */
+  --chart-positive: var(--green-500);
+  --chart-neutral: var(--teal-400);
+  --chart-warning: var(--lime-300);
+}
