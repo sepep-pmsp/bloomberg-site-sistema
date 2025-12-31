@@ -1,0 +1,39 @@
+<% layout('admin/layout') -%>
+<main class="container mx-auto mt-8 p-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Visão Geral</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <p class="text-gray-500 text-sm font-medium uppercase">Total de Usuários</p>
+                <p class="text-4xl font-bold text-gray-800"><%= totalUsers %></p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm font-medium uppercase">Status da API</p>
+                <p class="text-xl font-bold text-green-600">Conectada ✅</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-4 border-b bg-gray-50">
+                <h3 class="font-bold text-gray-700">Últimos Servidores Cadastrados</h3>
+            </div>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-sm text-gray-500 border-b">
+                        <th class="p-4 font-semibold">Nome</th>
+                        <th class="p-4 font-semibold">Domínio</th>
+                        <th class="p-4 font-semibold text-right">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% lastUsers.forEach(user => { %>
+                    <tr class="border-b hover:bg-gray-50 transition">
+                        <td class="p-4 text-gray-800"><%= user.nome %></td>
+                        <td class="p-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"><%= user.dominio %></span></td>
+                        <td class="p-4 text-gray-500 text-right text-sm"><%= user.data %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+</main>

@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const SecurityLog = require('../models/SecurityLog');
+const User = require('../../../../models/User');
+const SecurityLog = require('../../../../models/SecurityLog');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/domains/auth');
+const authConfig = require('../../../../config/domains/auth');
 
 class LoginController {
   async store(req, res) {

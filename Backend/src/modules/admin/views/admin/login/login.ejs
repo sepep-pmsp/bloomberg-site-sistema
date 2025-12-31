@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Administrativo - CODATA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0A290F] h-screen flex items-center justify-center">
+    <div class="bg-[#EBFAED] p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">Painel CODATA</h1>
+            <p class="text-slate-500 text-sm">Acesso restrito a administradores</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 mb-4 text-sm">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/admin/login" method="POST" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">E-mail Institucional</label>
+                <input type="email" name="email" required 
+                    class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" name="password" required 
+                    class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-[#0F3D17] text-white py-3 rounded-lg font-bold hover:bg-[#196626] transition duration-200">
+                Entrar no Sistema
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <a href="/" class="text-xs text-[#48D1AA] hover:underline">Voltar para o site principal</a>
+        </div>
+    </div>
+</body>
+</html>

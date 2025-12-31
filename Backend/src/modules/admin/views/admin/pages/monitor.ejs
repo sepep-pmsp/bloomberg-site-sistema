@@ -1,0 +1,55 @@
+<% layout('admin/layout') -%>
+<main class="container mx-auto mt-8 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-xs uppercase font-bold">Banco de Dados (<%= dbName %>)</p>
+                    <p class="text-2xl font-black <%= dbStatus === 'Online' ? 'text-green-600' : 'text-red-600' %>">
+                        <%= dbStatus %>
+                    </p>
+                </div>
+                <div class="h-12 w-12 rounded-full <%= dbStatus === 'Online' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %> flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-xs uppercase font-bold">Tentativas de Invasão/Erro</p>
+                    <p class="text-2xl font-black text-orange-600"><%= totalFailures %></p>
+                </div>
+                <div class="h-12 w-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl shadow-2xl overflow-hidden border border-slate-700">
+            <div class="p-4 border-b border-slate-700 bg-slate-800 flex justify-between items-center">
+                <h3 class="font-mono text-green-400 text-sm">system_security_logs.log</h3>
+                <span class="animate-pulse h-2 w-2 rounded-full bg-green-500"></span>
+            </div>
+            <div class="p-4 font-mono text-xs overflow-x-auto space-y-2 max-h-[500px] overflow-y-auto">
+                <% logs.forEach(log => { %>
+                    <div class="flex space-x-4 border-b border-slate-800 pb-2">
+                        <span class="text-slate-500">[<%= log.createdAt.toLocaleString() %>]</span>
+                        <span class="<%= log.status === 'success' ? 'text-blue-400' : 'text-red-400' %> font-bold">
+                            <%= log.status.toUpperCase() %>
+                        </span>
+                        <span class="text-slate-300">Email: <%= log.email %></span>
+                        <span class="text-slate-500 italic">IP: <%= log.ip %></span>
+                        <% if(log.reason) { %>
+                            <span class="text-yellow-500 font-bold">-> <%= log.reason %></span>
+                        <% } %>
+                    </div>
+                <% }) %>
+                <% if(logs.length === 0) { %>
+                    <p class="text-slate-500 italic">Nenhum log registrado ainda...</p>
+                <% } %>
+            </div>
+        </div>
+</main>

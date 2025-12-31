@@ -1,6 +1,6 @@
-const User = require('../models/User');
+const User = require('../../../../models/User');
 const bcrypt = require('bcrypt');
-const { dominiosPermitidos } = require('../config/domains/auth');
+const { dominiosPermitidos } = require('../../../../config/domains/auth');
 
 class RegisterController {
   async store(req, res) {
