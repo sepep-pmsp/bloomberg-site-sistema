@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const User = require('../models/User');
-const transport = require('../config/mail/mail');
+const User = require('../../../../models/User');
+const transport = require('../../../../config/mail/mail');
 
 class ForgotPasswordController {
   async store(req, res) {

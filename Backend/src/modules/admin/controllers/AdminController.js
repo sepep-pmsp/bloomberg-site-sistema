@@ -1,4 +1,4 @@
-const User = require('../../models/User');
+const User = require('../../../models/User');
 
 class AdminController {
   async index(req, res) {
@@ -43,6 +43,16 @@ class AdminController {
       return res.status(400).json({ error: "Erro ao remover usuário" });
     }
   }
+  renderApiDocs(req, res) {
+    const endpoints = [
+        { method: 'POST', path: '/register', desc: 'Cadastro de novos usuários (@prefeitura.sp.gov.br)' },
+        { method: 'POST', path: '/login', desc: 'Autenticação e geração de Token JWT' },
+        { method: 'POST', path: '/forgot-password', desc: 'Gera senha temporária e envia e-mail' },
+        { method: 'PUT', path: '/reset-password', desc: 'Substitui senha temporária pela definitiva' },
+        { method: 'GET', path: '/admin/users', desc: 'Lista todos os usuários (Requer Token Admin)' }
+    ];
+        return res.render('admin/pages/api-docs', { endpoints });
+    }
 }
 
 module.exports = new AdminController();
