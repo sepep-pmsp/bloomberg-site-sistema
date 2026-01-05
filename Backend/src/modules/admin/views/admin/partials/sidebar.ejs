@@ -1,7 +1,12 @@
 <aside class="w-64 bg-[#1b5c40] text-[#EBFAED] hidden md:flex flex-col shadow-xl">
-    <div class="p-6 border-b border-[#0A290F]">
-        <h2 class="text-xl font-bold tracking-wider">CODATA</h2>
-        <p class="text-xs text-[#ADEBB7] mt-1 uppercase">Gestão Pública</p>
+    <div class="p-4 border-b border-[#0A290F] flex flex-row items-center gap-12">
+        <span>
+            <h2 class="text-xl font-bold tracking-wider">CODATA</h2>
+            <p class="text-xs text-[#ADEBB7] mt-1 uppercase">Gestão Pública</p>
+        </span>
+        <span>
+            <img src="<%= user.avatar || '/images/avatars/admin-avatar.svg' %>" alt="avatar-admin-user" class="rounded-full mt-4 mx-auto border-2 border-green-950 object-cover">
+        </span>
     </div>
     <nav class="flex-1 mt-4 px-4 space-y-2">
         <a href="/admin/dashboard-view" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
