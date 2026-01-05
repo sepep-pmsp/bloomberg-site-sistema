@@ -8,28 +8,38 @@ class AdminPageController {
 
   async renderDashboard(req, res) {
     try {
-      const totalUsers = await User.countDocuments();
-      
-      const lastUsersRaw = await User.find()
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .select('nome email createdAt');
+        // 1. Busca os dados reais do banco
+        const totalUsers = await User.countDocuments();
+        const lastUsersRaw = await User.find()
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select('nome email createdAt');
 
-      const lastUsers = lastUsersRaw.map(user => ({
-        nome: user.nome,
-        dominio: `@${user.email.split('@')[1]}`,
-        data: user.createdAt.toLocaleDateString('pt-BR')
-      }));
+        const lastUsers = lastUsersRaw.map(user => ({
+            nome: user.nome,
+            dominio: `@${user.email.split('@')[1]}`,
+            data: user.createdAt.toLocaleDateString('pt-BR')
+        }));
 
-      // Renderiza o arquivo views/admin/pages/dashboard.ejs e passa os dados
-      return res.render('admin/pages/dashboard', {
-        totalUsers,
-        lastUsers
-      });
+        // 2. Define o usuário logado (Simulação por enquanto)
+        const loggedUser = {
+            nome: "Super Admin",
+            isAdmin: true,
+            avatar: "/images/avatars/admin-avatar.svg" 
+        };
+
+        // 3. Renderiza TUDO em um único comando no final
+        return res.render('admin/pages/dashboard', {
+            totalUsers,
+            lastUsers,
+            user: loggedUser
+        });
+
     } catch (err) {
-      return res.status(500).send("Erro ao carregar o dashboard administrativo.");
+        console.error(err);
+        return res.status(500).send("Erro ao carregar o dashboard administrativo.");
     }
-  }
+}
 
   async renderUsers(req, res) {
     try {
