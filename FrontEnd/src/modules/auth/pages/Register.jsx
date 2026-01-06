@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import side from '../services/auth.service';
 import LogoPrefeitura from '@/assets/images/LogoPrefeitura.svg';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register({ onBack }) {
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
@@ -53,7 +55,7 @@ export default function Register({ onBack }) {
                     <div className="bg-green-50 rounded-3xl p-8 max-w-md w-full text-center shadow-xl animate-fadeIn border border-white/20 flex flex-col items-center justify-center">
                         <h2 className="text-2xl font-bold mb-4 text-[var(--green-800)]">Cadastro Bem-Sucedido!</h2>
                         <p className="mb-6 text-[var(--green-800)]">Seu cadastro foi realizado com sucesso.</p>
-                        <button onClick={() => window.location.href = '/metodologia'} className="w-full h-12 rounded-2xl bg-[var(--green-800)] text-white font-bold hover:opacity-90 transition">Acessar</button>
+                        <button onClick={() => navigate('/metodologia', { replace: true })} className="w-full h-12 rounded-2xl bg-[var(--green-800)] text-white font-bold hover:opacity-90 transition">Acessar</button>
                     </div>
                 </div>
             )}
