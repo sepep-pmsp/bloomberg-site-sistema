@@ -1,12 +1,12 @@
-import 'react'
+import { AuthProvider } from '@/modules/auth';
+import AppRoutes from './routes/AppRoutes';
 
-function App() {
-
-  return (
-    <>
-     
-    </>
-  )
+export default function App() {
+    return (
+        <div>
+            <AuthProvider>
+                <AppRoutes />
+            </AuthProvider>
+        </div>
+    );
 }
-
-export default App

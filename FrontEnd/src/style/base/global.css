@@ -3,6 +3,7 @@
 @import "../tokens/fonts.css";
 @import "../tokens/typography.css";
 @import "../themes/default.theme.css";
+@import "../tokens/animations.css";
 
 body {
   font-family: var(--font-body);
