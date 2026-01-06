@@ -26,10 +26,26 @@ class LoginController {
     await SecurityLog.create({ email, ip, userAgent, status: 'success' });
 
     const { id, nome } = user;
-    return res.json({
-      user: { id, nome, email },
-      token: jwt.sign({ id }, authConfig.jwtSecret, { expiresIn: authConfig.expiresIn })
+    
+    // 1. Geramos o token exatamente como você já faz
+    const token = jwt.sign({ id }, authConfig.jwtSecret, { expiresIn: authConfig.expiresIn });
+
+    // 2. Em vez de enviar o token no JSON, enviamos pelo Cookie
+    res.cookie('token', token, {
+      httpOnly: true,     // Impede que o JS acesse o token (Segurança extra)
+      secure: false,      // Deixe 'false' por enquanto para funcionar em http://localhost
+      sameSite: 'lax',    // Proteção básica contra ataques CSRF
+      maxAge: 86400000    // Tempo de vida do cookie (1 dia em milissegundos)
     });
+    
+    return res.json({
+      user: { id, nome, email }
+    });
+
+  }
+  async delete(req, res) {
+    res.clearCookie('token');
+    return res.json({ message: 'Logout realizado com sucesso' });
   }
 }
 

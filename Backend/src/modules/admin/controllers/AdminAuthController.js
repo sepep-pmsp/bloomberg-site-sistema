@@ -50,7 +50,7 @@ module.exports = (req, res, next) => {
         return next();
     }
 
-    return res.redirect('/admin-panel/login');
+    return res.redirect('/admin/login');
 };
 
 module.exports = new AdminAuthController();

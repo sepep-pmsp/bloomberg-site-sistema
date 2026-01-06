@@ -10,5 +10,5 @@ module.exports = (req, res, next) => {
         return next();
     }
     res.locals.user = null;
-    return res.redirect('/admin-panel/login');
+    return res.redirect('/admin/login');
 };

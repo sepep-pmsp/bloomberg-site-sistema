@@ -54,7 +54,7 @@ class AdminPageController {
   async deleteUser(req, res) {
     try {
       await User.findByIdAndDelete(req.params.id);
-      return res.redirect('/admin/pages/users-view'); // Recarrega a página
+      return res.redirect('/admin/users-view');
     } catch (err) {
       return res.status(500).send("Erro ao eliminar usuário.");
     }
