@@ -2,10 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AuthLayout from '@/layouts/AuthLayout';
 import ProtectedRoute from '@/modules/auth/components/ProtectedRoute';
 import AuthPage from '@/modules/auth/AuthPage';
-
-function Metodologia() {
-  return <h1>Metodologia</h1>;
-}
+import AppLayout from '@/layouts/AppLayout';
+import MetodologiaPage from '../modules/metodologia/pages/MetodologiaPage';
 
 export default function AppRoutes() {
   return (
@@ -17,8 +15,8 @@ export default function AppRoutes() {
 
       {/* Protegido */}
       <Route element={<ProtectedRoute />}>
-        <Route element={<AuthLayout />}>
-          <Route path="/metodologia" element={<Metodologia />} />
+        <Route element={<AppLayout />}>
+          <Route path="/metodologia" element={<MetodologiaPage />} />
         </Route>
       </Route>
 
