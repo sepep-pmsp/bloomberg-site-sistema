@@ -17,10 +17,6 @@
 .accordion__item.is-active {
   width: 45rem;
   background-color: #52B69A;
-
-  @media screen and (max-width: 768px) {
-    width: 20rem;
-  }
 }
 
 .accordion__content {
