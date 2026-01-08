@@ -31,8 +31,8 @@ export default function Login({ onRegister, onForgot }) {
                     <input type="password" autoComplete="on" onChange={e => setPassword(e.target.value)} className='w-[90%] flex-1 h-14 bg-transparent border-0 outline-none ring-0 focus:outline-none focus:ring-0 text-[var(--green-800)] placeholder:text-[#48742c]/60' />
                 </span>
                 <a onClick={onForgot} rel="noopener noreferrer" className='cursor-pointer text-end w-full text-[var(--accent-mint)] hover:underline'>Esqueceu sua senha?</a>
+                <button type="submit" className='w-full bg-[var(--green-100)] h-14 rounded-2xl flex items-center justify-center text-[var(--green-800)] capitalize font-bold'>login</button>
             </form>
-            <button type="submit" form="login-form" className='w-full bg-[var(--green-100)] h-14 rounded-2xl flex items-center justify-center text-[var(--green-800)] capitalize font-bold'>login</button>
             <a onClick={onRegister} className='text-[var(--accent-mint)] font-light hover:underline pt-2'>Não tem cadastro? <span style={{ fontWeight: "bold" }}>Cadastre-se</span></a>
         </div>
     );

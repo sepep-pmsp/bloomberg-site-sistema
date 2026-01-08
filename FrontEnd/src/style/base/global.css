@@ -4,6 +4,8 @@
 @import "../tokens/typography.css";
 @import "../themes/default.theme.css";
 @import "../tokens/animations.css";
+@import "@/modules/metodologia/styles/buttons.css";
+@import "@/modules/metodologia/styles/accordion.css";
 
 body {
   font-family: var(--font-body);
