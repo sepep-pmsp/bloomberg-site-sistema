@@ -4,7 +4,7 @@ import VectorBg from '@/assets/images/VectorBg.svg'
 
 export default function Cenarios() {
     return (
-        <div className='w-screen h-full 2xl:h-[115vh]'>
+        <div className='w-screen h-full 2xl:h-[117vh]'>
             <div className='flex flex-col justify-center items-center' style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
                 <div className='pt-28 flex flex-col gap-10 mb-16'>
                     <h2 className='text-3xl 2xl:!text-[64px] text-center capitalize w-full '>Como construímos <br /> cenários?</h2>
@@ -12,7 +12,7 @@ export default function Cenarios() {
                 </div>
                 <CardHover />
             </div>
-            <img src={VectorBg} className='w-full relative bottom-95 -z-1 2xl:h-[45rem] select-none pointer-events-none' />
+            <img src={VectorBg} className='w-full relative bottom-95 -z-1 2xl:h-[45rem] select-none pointer-events-none max-md:hidden' />
         </div>
     )
 }

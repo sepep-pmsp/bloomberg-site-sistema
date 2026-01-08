@@ -13,7 +13,7 @@ export default function AccordeonLateral() {
     ];
 
     return (
-        <ul className=" flex gap-7 px-6 overflow-x-auto h-auto items-center py-8">
+        <ul className=" flex gap-7 px-6 overflow-x-auto md:overflow-x-scroll h-auto items-center py-8 md:flex-row flex-col">
             {items.map(item => (
                 <li
                     key={item.id}

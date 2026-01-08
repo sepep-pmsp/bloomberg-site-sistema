@@ -14,7 +14,7 @@ export default function Reducoes() {
                     <span className="label">Saiba mais</span>
                     <span className="arrow"><i className="fa-solid fa-arrow-right-long text-[var(--green-50)]"></i></span>
                 </button>
-                <div className='relative 2xl:top-30'>
+                <div className='relative 2xl:top-30 overflow-auto'>
                     <AccordeonLateral />
                 </div>
             </div>
