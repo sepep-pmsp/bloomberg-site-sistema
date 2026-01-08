@@ -1,0 +1,76 @@
+.btSaibaMais {
+    background-color: var(--green-800);
+    height: 5rem;
+    width: 13rem;
+    color: var(--green-50);
+    font-size: 1.7rem;
+    border-radius: 1rem;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 2.5rem;
+    gap: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+    transition: width 0.60s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btSaibaMais .label {
+    white-space: nowrap;
+    transition: transform 0.35s ease-in-out;
+}
+
+.btSaibaMais .arrow {
+    font-size: 2.2rem;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition:
+        opacity 0.3s ease-in-out,
+        transform 0.35s ease-in-out;
+}
+
+.btSaibaMais:hover {
+    width: 16rem;
+    animation: colorShift 0.45s ease-in-out forwards;
+}
+
+.btSaibaMais:not(:hover) {
+    animation: none;
+    background-color: #0A290F;
+}
+
+.btSaibaMais .label {
+    white-space: nowrap;
+    transition: transform 0.35s ease-in-out;
+}
+
+.btSaibaMais:hover .label {
+    transform: translateX(-0.3rem);
+}
+
+.btSaibaMais .arrow {
+    font-size: 2.2rem;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.3s ease-in-out, transform 0.35s ease-in-out;
+}
+
+.btSaibaMais:hover .arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@keyframes colorShift {
+    0% {
+        background-color: var(--green-800);
+    }
+
+    50% {
+        background-color: var(--green-700);
+    }
+
+    100% {
+        background-color: var(--green-600);
+    }
+}

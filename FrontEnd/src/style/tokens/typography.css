@@ -45,6 +45,8 @@
 .pt-16   { padding-top: 4rem; }
 .pt-20   { padding-top: 5rem; }
 .pt-24   { padding-top: 6rem; }
+.pt-28   { padding-top: 7rem; }
+.pt-32   { padding-top: 8rem; }
 
 .pb-0    { padding-bottom: 0; }
 .pb-1    { padding-bottom: 0.25rem; }
@@ -102,6 +104,7 @@
 .px-7    { padding-top: 1.75rem; padding-bottom: 1.75rem; } 
 .px-8    { padding-left: 2rem; padding-right: 2rem; }
 .px-10   { padding-left: 2.5rem; padding-right: 2.5rem; }
+.px-11   { padding-left: 44px; padding-right: 44px; }
 .px-12   { padding-left: 3rem; padding-right: 3rem; }
 .px-16   { padding-left: 4rem; padding-right: 4rem; }
 .px-20   { padding-left: 5rem; padding-right: 5rem; }
