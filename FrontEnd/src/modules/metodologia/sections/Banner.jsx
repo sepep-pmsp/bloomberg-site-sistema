@@ -8,8 +8,8 @@ export default function Banner() {
     ];
     return (
         <>
-            <section className="relative min-h-[65vh] bg-[url('@/assets/images/banner.svg')] w-full bg-cover bg-center max-md:w-[28.9rem]">
-                <div className="absolute inset-0 w-full h-full flex items-end pb-20 bg-black/55 backdrop-blur-[1px] max-md:w-[28.9rem]">
+            <section className="relative min-h-[65vh] bg-[url('@/assets/images/banner.svg')] w-full bg-cover bg-center max-md:w-[26.55rem]">
+                <div className="absolute inset-0 w-full h-full flex items-end pb-20 bg-black/55 backdrop-blur-[1px] max-md:w-[26.55rem]">
                     <div className="max-w-180 px-11 text-white">
                         <h1 className="mb-6 text-2xl 2xl:!text-[82px] font-bold leading-tight max-w-130">
                             ELETRIFICAÇÃO<br />DA FROTA
@@ -21,7 +21,7 @@ export default function Banner() {
                     </div>
                 </div>
             </section>
-            <section className="bg-[var(--green-800)] w-full max-md:w-[28.9rem]">
+            <section className="bg-[var(--green-800)] w-full max-md:w-[26.55rem]">
                 <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_1.4fr_1fr] divide-y md:divide-y-0 md:divide-x divide-green-700 md:mx-auto">
                     {stats.map(({ value, description }, index) => (
                         <div key={index} className={`flex flex-col items-center justify-center px-6 py-10 text-center 2xl:${index === 1 ? '!border-x-3 !border-[var(--green-400)] w-full' : ''}`}>
