@@ -13,16 +13,28 @@ const app = express();
 // 1. Conexão com o Banco de Dados
 connectDB();
 
-// 2. Configuração do CORS (Deve vir antes das rotas e outros middlewares)
-// Esta configuração permite que o Vite (5173) envie cookies para o Node (3001)
-const corsOptions = {
-  origin: 'http://localhost:5173', 
-  credentials: true, // Permite o recebimento de Cookies HttpOnly
+// 2. Configuração do CORS (Bloco Único e Corrigido)
+const allowedOrigins = [
+  'http://localhost',       // Nginx/Docker
+  'http://localhost:5173',  // Local sem Docker
+  'http://localhost:3001', // Backend local
+  'http://127.0.0.1'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permite requisições sem origin (como ferramentas de teste ou mobile)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS: Origem não permitida'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
+}));
 
 // 3. Middlewares de Parser
 app.use(express.json());

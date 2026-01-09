@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function loadUser() {
       try {
-        const { data } = await side.get('api/me');
+        const { data } = await side.get('/api/me');
         setUser(data);
       // eslint-disable-next-line no-unused-vars
       } catch (err) {
