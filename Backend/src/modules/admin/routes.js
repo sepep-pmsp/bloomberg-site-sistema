@@ -27,5 +27,6 @@ adminRoutes.post('/users/toggle/:id', AdminPageController.toggleAdmin);
 // --- DADOS DA API PARA O ADMIN (Se precisar de JSON no futuro) ---
 adminRoutes.get('/dashboard-data', authMiddleware, adminMiddleware, AdminController.dashboard);
 adminRoutes.get('/users-data', authMiddleware, adminMiddleware, AdminController.index);
+adminRoutes.post('/run-engine', adminAuthMiddleware, AdminController.updateEngine);
 
 module.exports = adminRoutes;
