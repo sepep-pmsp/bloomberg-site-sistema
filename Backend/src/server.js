@@ -1,3 +1,4 @@
+const compression = require('compression');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -9,6 +10,7 @@ const connectDB = require('./config/db/database');
 const routes = require('./routes/main'); 
 
 const app = express();
+app.use(compression());
 
 // 1. Conexão com o Banco de Dados
 connectDB();

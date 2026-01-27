@@ -1,27 +1,187 @@
 <% layout('admin/layout') -%>
-<span class="container mx-auto mt-8 p-4">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 font-mono">Endpoints da API v1.0</h2>
 
-        <div class="space-y-6">
-            <% endpoints.forEach(route => { %>
-                <div class="bg-white rounded-lg shadow-md border-l-8 <%= route.method === 'POST' ? 'border-green-500' : 'border-blue-500' %> overflow-hidden">
-                    <div class="p-4 flex items-center space-x-4 bg-gray-50">
-                        <span class="px-3 py-1 rounded text-white font-bold text-xs <%= route.method === 'POST' ? 'bg-green-600' : 'bg-blue-600' %>">
-                            <%= route.method %>
-                        </span>
-                        <code class="text-gray-800 font-bold text-lg"><%= route.path %></code>
+<div class="space-y-6">
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="bg-[#1b5c40] p-3 rounded-lg text-white">
+                <i class="fas fa-terminal text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">CODATA API <span class="text-sm font-normal bg-blue-100 text-blue-700 px-2 py-1 rounded">v2.0.0</span></h1>
+                <p class="text-gray-500">Documentação técnica e monitoramento do Data Lake.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-table text-[#1b5c40]"></i> Dados Tabulares & Analíticos
+            </h3>
+            <ul class="space-y-3">
+                <li class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
+                    <div>
+                        <div class="font-bold text-gray-700 text-sm">frota_tabela.json</div>
+                        <div class="text-xs text-gray-400">Dados consolidados para tabelas</div>
                     </div>
-                    <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-sm text-gray-600 mb-2 font-bold uppercase">Descrição:</p>
-                            <p class="text-gray-700 text-sm"><%= route.desc %></p>
+                    <% if (filesStatus['frota_tabela.json']) { %>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full border border-green-200">ONLINE</span>
+                    <% } else { %>
+                        <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full border border-red-200">OFFLINE</span>
+                    <% } %>
+                </li>
+
+                <li class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
+                    <div>
+                        <div class="font-bold text-gray-700 text-sm">simulacao_monte_carlo.json</div>
+                        <div class="text-xs text-gray-400">Previsões estatísticas futuras</div>
+                    </div>
+                    <% if (filesStatus['simulacao_monte_carlo.json']) { %>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full border border-green-200">ONLINE</span>
+                    <% } else { %>
+                        <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full border border-red-200">OFFLINE</span>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-map-marked-alt text-[#1b5c40]"></i> Camada Geoespacial (Mapas)
+            </h3>
+            <ul class="space-y-3">
+                <li class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
+                    <div>
+                        <div class="font-bold text-gray-700 text-sm">frota_pontos.geojson</div>
+                        <div class="text-xs text-gray-400">Pontos em tempo real & Heatmap</div>
+                    </div>
+                    <% if (filesStatus['frota_pontos.geojson']) { %>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full border border-green-200">ONLINE</span>
+                    <% } else { %>
+                        <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full border border-red-200">OFFLINE</span>
+                    <% } %>
+                </li>
+
+                <li class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
+                    <div>
+                        <div class="font-bold text-gray-700 text-sm">frota_rotas.geojson</div>
+                        <div class="text-xs text-gray-400">Traçados viários (Elétrico vs Diesel)</div>
+                    </div>
+                    <% if (filesStatus['frota_rotas.geojson']) { %>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full border border-green-200">ONLINE</span>
+                    <% } else { %>
+                        <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full border border-red-200">OFFLINE</span>
+                    <% } %>
+                </li>
+
+                <li class="flex items-center justify-between p-2 hover:bg-gray-50 rounded transition">
+                    <div>
+                        <div class="font-bold text-gray-700 text-sm">mapas_distritos.json</div>
+                        <div class="text-xs text-gray-400">Mapa político de distritos</div>
+                    </div>
+                    <% if (filesStatus['mapas_distritos.json']) { %>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full border border-green-200">ONLINE</span>
+                    <% } else { %>
+                        <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full border border-red-200">OFFLINE</span>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <% endpoints.forEach((ep, index) => { %>
+            <div class="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all">
+                <button onclick="toggleDetails('ep-<%= index %>')" class="w-full flex items-center justify-between p-4 focus:outline-none">
+                    <div class="flex items-center gap-4">
+                        <span class="px-3 py-1 rounded font-bold text-sm <%= ep.method === 'GET' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white' %>">
+                            <%= ep.method %>
+                        </span>
+                        <span class="font-mono text-gray-700 font-semibold"><%= ep.path %></span>
+                        <span class="text-gray-400 text-sm hidden md:inline">— <%= ep.desc %></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <% if(ep.status) { %>
+                            <span class="flex items-center gap-1 text-xs text-green-600 font-bold bg-green-50 px-2 py-1 rounded">
+                                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> PRONTO
+                            </span>
+                        <% } else { %>
+                            <span class="text-xs text-red-600 font-bold bg-red-50 px-2 py-1 rounded">PENDENTE</span>
+                        <% } %>
+                        <i class="fas fa-chevron-down text-gray-300 group-hover:text-gray-500 transition-transform" id="icon-<%= index %>"></i>
+                    </div>
+                </button>
+
+                <div id="ep-<%= index %>" class="hidden border-t border-gray-100 bg-gray-50 p-6 space-y-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Descrição</h4>
+                        <p class="text-gray-700"><%= ep.desc %></p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Exemplo de Resposta (JSON)</h4>
+                        <div class="bg-[#1e1e1e] p-4 rounded-lg overflow-x-auto text-sm leading-relaxed">
+                            <pre class="text-blue-300"><code><%= JSON.stringify(ep.response, null, 2) %></code></pre>
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 mb-2 font-bold uppercase">Exemplo de Body (JSON):</p>
-                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs"><%= route.body %></pre>
-                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <a href="<%= ep.path %>" target="_blank" class="text-sm font-bold text-[#1b5c40] hover:underline flex items-center gap-2">
+                            <i class="fas fa-external-link-alt"></i> Testar rota no navegador
+                        </a>
                     </div>
                 </div>
-            <% }) %>
-        </div>
-</span>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<script>
+    function toggleDetails(id) {
+        const el = document.getElementById(id);
+        const icon = document.getElementById('icon-' + id.split('-')[1]);
+        el.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+    }
+</script>
+
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8 flex items-center justify-between mt-8">
+    <div>
+        <h3 class="text-lg font-bold text-gray-800">Engine de Dados v2.0</h3>
+        <p class="text-sm text-gray-500">Executa scripts Python para atualizar mapas, rotas e tabelas.</p>
+    </div>
+    <button id="btnRunEngine" onclick="runPipeline()" class="flex items-center gap-2 bg-[#1b5c40] hover:bg-[#0f3d17] text-white px-6 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95">
+        <i class="fas fa-play text-xs"></i> 
+        <span>Executar Pipeline Completo</span>
+    </button>
+</div>
+
+<script>
+async function runPipeline() {
+    const btn = document.getElementById('btnRunEngine');
+    const originalContent = btn.innerHTML;
+    
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner animate-spin"></i> <span>Processando Mapas e Dados...</span>`;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+    try {
+        const response = await fetch('/admin/run-engine', { method: 'POST' });
+        const result = await response.json();
+
+        if (result.success) {
+            alert("Sucesso: " + result.message);
+            window.location.reload(); 
+        } else {
+            alert("Erro: " + result.message);
+        }
+    } catch (err) {
+        alert("Erro de conexão com o servidor.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+}
+</script>

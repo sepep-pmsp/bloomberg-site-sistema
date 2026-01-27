@@ -1,5 +1,6 @@
 const User = require('../../../models/User');
 const SecurityLog = require('../../../models/SecurityLog');
+const fs = require('fs');
 const ejs = require('ejs');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -98,39 +99,57 @@ class AdminPageController {
     }
   }
 
-    renderApiDocs(req, res) {
+    async renderApiDocs(req, res) {
+        const contentPath = path.join(__dirname, '../../api/content');
+        const checkFile = (filename) => fs.existsSync(path.join(contentPath, filename));
+        
+        const filesStatus = {
+            'frota_tabela.json': checkFile('frota_tabela.json'),
+            'frota_pontos.geojson': checkFile('frota_pontos.geojson'),
+            'frota_rotas.geojson': checkFile('frota_rotas.geojson'),
+            'mapas_distritos.json': checkFile('mapas_distritos.json'),
+            'simulacao_monte_carlo.json': checkFile('simulacao_monte_carlo.json')
+        };
+
         const endpoints = [
             { 
-                method: 'POST', 
-                path: '/api/register', 
-                desc: 'Cria um novo usuário.',
-                body: '{ "nome": "...", "email": "...", "senha": "..." }',
-                response: '{ "msg": "Usuário criado!" }'
+                tag: 'Frota', method: 'GET', path: '/api/frota-tabela', 
+                desc: 'Retorna a lista completa de ônibus.', 
+                response: [{ id: 64460, linha: "502J-10" }], 
+                status: filesStatus['frota_tabela.json']
             },
             { 
-                method: 'POST', 
-                path: '/api/login', 
-                desc: 'Autentica o usuário e retorna um Token JWT.',
-                body: '{ "email": "...", "senha": "..." }',
-                response: '{ "token": "ey...", "user": {...} }'
+                tag: 'Geográfico', method: 'GET', path: '/api/frota-pontos', 
+                desc: 'GeoJSON com posições e calor.', 
+                response: { type: 'FeatureCollection' }, 
+                status: filesStatus['frota_pontos.geojson']
             },
             { 
-                method: 'POST', 
-                path: '/api/forgot-password', 
-                desc: 'Solicita recuperação de senha via e-mail institucional.',
-                body: '{ "email": "..." }',
-                response: '{ "msg": "E-mail enviado!" }'
+                tag: 'Geográfico', method: 'GET', path: '/api/frota-rotas', 
+                desc: 'GeoJSON com trajetos das linhas.', 
+                response: { type: 'FeatureCollection' }, 
+                status: filesStatus['frota_rotas.geojson']
             },
             { 
-                method: 'PUT', 
-                path: '/api/reset-password', 
-                desc: 'Redefine a senha usando a chave temporária.',
-                body: '{ "email": "...", "senhaTemporaria": "...", "novaSenha": "..." }',
-                response: '{ "msg": "Senha atualizada!" }'
+                tag: 'Geográfico', method: 'GET', path: '/api/mapa-distritos', 
+                desc: 'Consolidado por distritos.', 
+                response: { "JABAQUARA": { co2: 15.4 } }, 
+                status: filesStatus['mapas_distritos.json']
+            },
+            { 
+                tag: 'Simulação', method: 'GET', path: '/api/simulacao', 
+                desc: 'Simulação Monte Carlo.', 
+                response: { cenario_50: { media: 0.008 } }, 
+                status: filesStatus['simulacao_monte_carlo.json']
             }
         ];
 
-        return res.render('admin/pages/api-docs', { endpoints });
+        return res.render('admin/pages/api-docs', {
+            endpoints,
+            filesStatus,
+            user: req.user || { nome: "Admin", avatar: "/images/avatars/admin-avatar.svg" },
+            title: 'CODATA API Docs'
+        });
     }
 }
 

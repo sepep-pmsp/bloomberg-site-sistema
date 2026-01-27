@@ -1,4 +1,6 @@
 const User = require('../../../models/User');
+const path = require('path');
+const { exec } = require('child_process');
 
 class AdminController {
   async index(req, res) {
@@ -9,50 +11,56 @@ class AdminController {
       return res.status(500).json({ error: "Erro ao buscar usuários" });
     }
   }
+
   async dashboard(req, res) {
     try {
-        const totalUsers = await User.countDocuments();
-        const lastUsersRaw = await User.find()
+      const totalUsers = await User.countDocuments();
+
+      const lastUsersRaw = await User.find()
         .sort({ createdAt: -1 })
         .limit(5)
         .select('nome email createdAt');
-        const lastUsers = lastUsersRaw.map(user => {
+
+      const lastUsers = lastUsersRaw.map(user => {
         const dominio = user.email.split('@')[1];
         return {
-            _id: user._id,
-            nome: user.nome,
-            dominio: `@${dominio}`,
-            dataCadastro: user.createdAt
+          _id: user._id,
+          nome: user.nome,
+          dominio: `@${dominio}`,
+          dataCadastro: user.createdAt
         };
-        });
+      });
 
-        return res.json({
-        totalUsers,
-        lastUsers
+      return res.json({ totalUsers, lastUsers });
+    } catch (err) {
+      return res.status(500).json({ error: "Erro ao gerar estatísticas" });
+    }
+  }
+
+  async updateEngine(req, res) {
+    const scriptPath = path.join(
+      __dirname,
+      '../../../../engine/scripts/run_pipeline.sh'
+    );
+    console.log("Tentando rodar script em:", scriptPath);
+
+    exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Erro na execução: ${error}`);
+        return res.status(500).json({
+          success: false,
+          message: "Falha ao executar o pipeline.",
+          error: stderr
         });
-    } catch (err) {
-        return res.status(500).json({ error: "Erro ao gerar estatísticas" });
-    }
+      }
+
+      return res.json({
+        success: true,
+        message: "Dados atualizados com sucesso!",
+        output: stdout
+      });
+    });
   }
-  async delete(req, res) {
-    try {
-      const { id } = req.params;
-      await User.findByIdAndDelete(id);
-      return res.json({ message: "Usuário removido com sucesso" });
-    } catch (err) {
-      return res.status(400).json({ error: "Erro ao remover usuário" });
-    }
-  }
-  renderApiDocs(req, res) {
-    const endpoints = [
-        { method: 'POST', path: '/register', desc: 'Cadastro de novos usuários (@prefeitura.sp.gov.br)' },
-        { method: 'POST', path: '/login', desc: 'Autenticação e geração de Token JWT' },
-        { method: 'POST', path: '/forgot-password', desc: 'Gera senha temporária e envia e-mail' },
-        { method: 'PUT', path: '/reset-password', desc: 'Substitui senha temporária pela definitiva' },
-        { method: 'GET', path: '/admin/users', desc: 'Lista todos os usuários (Requer Token Admin)' }
-    ];
-        return res.render('admin/pages/api-docs', { endpoints });
-    }
 }
 
 module.exports = new AdminController();
