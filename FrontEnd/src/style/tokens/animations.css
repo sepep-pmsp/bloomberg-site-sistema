@@ -87,3 +87,28 @@
 .animate-fadeIn {
     animation: fadeIn 0.25s ease-out;
 }
+
+/* animations.css */
+.nav-hover-effect {
+  --b: 0.1em;
+  --c: var(--green-100); /* Cor do Hover/Ativo */
+  --default: var(--accent-mint); /* Cor padrão do texto (Branco) */
+  
+  color: #0000;
+  padding-block: var(--b);
+  
+  background: 
+    linear-gradient(var(--c) 50%, var(--default) 0) 0% calc(100% - var(--_p,0%))/100% 200%,
+    linear-gradient(var(--c) 0 0) 0% var(--_p,0%)/var(--_p,0%) var(--b) no-repeat;
+  
+  -webkit-background-clip: text, padding-box;
+          background-clip: text, padding-box;
+  
+  transition: 0.3s var(--_s,0s) linear, background-size 0.3s calc(0.3s - var(--_s,0s));
+}
+
+.nav-hover-effect:hover,
+.nav-hover-effect.active-link {
+  --_p: 100%;
+  --_s: 0.3s;
+}
