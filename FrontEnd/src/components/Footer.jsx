@@ -1,6 +1,6 @@
 import React from 'react'
 import logo from '@/assets/images/LogoPrefeitura.svg'
-import bloomberg from '@/assets/images/logo-bloomberg.svg'
+import bloomberg from '@/assets/images/bloomberg-footer-lockup.svg'
 
 export default function Footer() {
     return (
@@ -25,7 +25,7 @@ export default function Footer() {
 
                     </div>
                     <div className='text-[var(--accent-mint)] flex flex-col 2xl:flex-row justify-between items-center'>
-                        <span className=' flex flex-col gap-2 items-start'>
+                        <span className=' flex flex-col gap-7 items-start'>
                             <h4 className='text-[var(--accent-mint)] !text-xl'>Em Parceria com:</h4>
                             <img src={bloomberg} alt="" className='2xl:relative 2xl:right-4' />
                         </span>
