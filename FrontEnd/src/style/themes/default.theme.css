@@ -2,6 +2,7 @@
   /* Backgrounds */
   --bg-page: var(--green-50);
   --bg-card: #ffffff;
+  --bg-page-secondary: #D6F5DB;
 
   /* Text */
   --text-primary: var(--color-primary);
