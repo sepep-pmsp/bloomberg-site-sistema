@@ -2,11 +2,13 @@
   /* Backgrounds */
   --bg-page: var(--green-50);
   --bg-card: #ffffff;
+  --bg-page-secondary: #D6F5DB;
 
   /* Text */
-  --text-primary: var(--green-800);
+  --text-primary: var(--color-primary);
   --text-secondary: var(--green-600);
   --text-muted: var(--green-500);
+  --text-clean: var(--green-50);
 
   /* UI */
   --primary: var(--green-500);

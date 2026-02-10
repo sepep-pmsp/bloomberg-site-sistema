@@ -1,12 +1,9 @@
 import React from 'react'
 import bannerImg from '@/assets/images/banner.svg';
+import BusProgressBar from '../components/BusProgressBar';
 
 export default function Banner() {
-    const stats = [
-        { value: '30%', description: 'De toda a frota de São Paulo já é elétrica' },
-        { value: '1000', description: 'Isso representa um total de 1000 veículos rodando na cidade sem combustível' },
-        { value: '70%', description: 'É a meta de eletrificação para o ano de 2030' },
-    ];
+
     return (
         <>
             <section style={{ backgroundImage: `url(${bannerImg})` }} className="relative min-h-[65vh] w-full bg-cover bg-center max-md:w-[26.55rem]">
@@ -22,19 +19,16 @@ export default function Banner() {
                     </div>
                 </div>
             </section>
-            <section className="bg-[var(--green-800)] w-full max-md:w-[26.55rem]">
-                <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_1.4fr_1fr] divide-y md:divide-y-0 md:divide-x divide-green-700 md:mx-auto">
-                    {stats.map(({ value, description }, index) => (
-                        <div key={index} className={`flex flex-col items-center justify-center px-6 py-10 text-center 2xl:${index === 1 ? '!border-x-3 !border-[var(--green-400)] w-full' : ''}`}>
-                            <h2 className="2xl:!text-[82px] font-bold text-[var(--green-400)]">
-                                {value}
-                            </h2>
-                            <h4 className="mt-4 !text-2xl text-[var(--green-400)] max-w-xs">
-                                {description}
-                            </h4>
-                        </div>
-                    ))}
+            <section className='bg-[var(--bg-page-secondary)] py-8 '>
+                <div className='flex flex-col gap-15'style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
+                    <h1 className='lg:!text-5xl !text-base lg:w-4xl'>Acompanhe de perto a meta de Eletrificação para 2028</h1>
+                    <div className='flex flex-col lg:flex-row justify-between gap-8'>
+                        <p className='w-full !font-semibold lg:w-2xl !text-2xl'>Substituir 2.600 ônibus movidos a diesel por veículos de matriz energética mais limpa, reforçando o compromisso da cidade com a preservação ambiental.</p>
+                    </div>
                 </div>
+            </section>
+            <section style={{ maxWidth: "1420px", height: "75vh", margin: "0 auto" }}>
+                <BusProgressBar/>
             </section>
         </>
     )
