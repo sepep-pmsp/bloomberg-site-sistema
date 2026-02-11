@@ -4,6 +4,10 @@ const LoginController = require('./controllers/login/LoginController');
 const ForgotPasswordController = require('./controllers/login/ForgotPasswordController');
 const ProfileController = require('./controllers/profile/ProfileController');
 const authMiddleware = require('./middlewares/auth');
+
+// AJUSTE DE CAMINHO: Baseado na sua estrutura de pastas enviada
+const ContentController = require('./controllers/service/ContentController'); 
+
 const fs = require('fs');
 const path = require('path');
 
@@ -15,6 +19,12 @@ apiRoutes.post('/login', LoginController.store);
 apiRoutes.post('/forgot-password', ForgotPasswordController.store);
 apiRoutes.put('/reset-password', ForgotPasswordController.update);
 
+// --- ROTA DE CONTEÚDO (PÚBLICA - GET) ---
+// O Front acessa: GET /api/content/metodologia
+apiRoutes.get('/content/:pageName', ContentController.getPageContent);
+
+
+// --- ROTAS DE ARQUIVOS JSON ESTÁTICOS ---
 apiRoutes.get('/frota-tabela', (req, res) => {
     try {
         const dataPath = path.join(__dirname, 'content/frota_tabela.json');
@@ -50,7 +60,13 @@ apiRoutes.get('/simulacao', (req, res) => {
     }
 });
 
+// --- ROTAS PROTEGIDAS (PRECISA DE LOGIN) ---
 apiRoutes.use(authMiddleware);
+
+// ROTA DE CONTEÚDO (PRIVADA - PUT)
+// O Admin acessa: PUT /api/content/metodologia/banner
+// Corrigido de 'routes.put' para 'apiRoutes.put'
+apiRoutes.put('/content/:pageName/:sectionKey', ContentController.updateSection);
 
 apiRoutes.get('/me', ProfileController.show);
 apiRoutes.delete('/logout', LoginController.delete);
