@@ -7,13 +7,17 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 
 const connectDB = require('./config/db/database');
+const runAllSeeds = require('./seeds/index');
 const routes = require('./routes/main'); 
 
 const app = express();
 app.use(compression());
 
 // 1. Conexão com o Banco de Dados
-connectDB();
+connectDB().then(() => {
+    // Roda os seeds assim que conectar, mas sem travar o servidor
+    runAllSeeds(); 
+});
 
 // 2. Configuração do CORS (Bloco Único e Corrigido)
 const allowedOrigins = [
