@@ -1,0 +1,96 @@
+<% layout('admin/layout') -%>
+
+<div class="p-6 bg-gray-50 min-h-screen">
+  <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800"><%= pageTitle %></h1>
+      <button onclick="saveReducoes()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow transition flex items-center gap-2">
+        <i class="fas fa-save"></i> Salvar Reduções
+      </button>
+  </div>
+  
+  <form id="reducoesForm" class="space-y-6 max-w-5xl mx-auto">
+      
+      <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+          <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Metodologia Técnica</h2>
+          <div class="grid gap-4">
+              <div class="grid md:grid-cols-2 gap-4">
+                  <div>
+                      <label class="block font-bold text-gray-700">Título</label>
+                      <input type="text" id="secTitle" value="<%= content.title %>" class="w-full border p-2 rounded">
+                  </div>
+                  <div>
+                      <label class="block font-bold text-gray-700">Subtítulo</label>
+                      <input type="text" id="secSubtitle" value="<%= content.subtitle %>" class="w-full border p-2 rounded">
+                  </div>
+              </div>
+              <div>
+                  <label class="block font-bold text-gray-700">Texto Técnico (Doc)</label>
+                  <textarea id="secDoc" class="w-full border p-3 rounded bg-gray-50 leading-relaxed font-mono text-sm" rows="12"><%= content.doc || '' %></textarea>
+              </div>
+          </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+          <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Itens com Fórmulas</h2>
+          
+          <div class="bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded mb-6 flex items-start gap-3">
+              <i class="fas fa-calculator mt-1"></i>
+              <div>
+                  <h3 class="font-bold text-sm">Como adicionar fórmulas matemáticas?</h3>
+                  <p class="text-xs mt-1">
+                      Para que o texto apareça como uma equação destacada no site, coloque o conteúdo entre dois cifrões (<code>$$</code>).
+                      <br>
+                      Exemplo: <code>O cálculo é: $$X = Y * 2$$ e segue o texto...</code>
+                  </p>
+              </div>
+          </div>
+
+          <div id="itemsContainer" class="space-y-6">
+              <% (content.items || []).forEach((item, index) => { %>
+                  <div class="item-group border p-4 rounded bg-gray-50 relative hover:shadow-md transition">
+                      <span class="absolute top-2 right-2 font-bold text-gray-300 text-xl">#<%= index + 1 %></span>
+                      
+                      <label class="text-xs font-bold text-gray-500 uppercase">Número</label>
+                      <input type="text" class="item-number w-20 border p-1 rounded mb-3 font-bold text-center" value="<%= item.number %>">
+                      
+                      <label class="text-xs font-bold text-gray-500 uppercase block">Descrição & Fórmulas</label>
+                      <textarea class="item-desc w-full border p-2 rounded focus:ring-green-500 font-mono text-sm" rows="6"><%= item.description %></textarea>
+                  </div>
+              <% }) %>
+          </div>
+      </div>
+  </form>
+</div>
+
+<script>
+    async function saveReducoes() {
+        const items = [];
+        document.querySelectorAll('.item-group').forEach((group, idx) => {
+            items.push({
+                id: idx,
+                number: group.querySelector('.item-number').value,
+                description: group.querySelector('.item-desc').value
+            });
+        });
+
+        const payload = {
+            content: {
+                title: document.getElementById('secTitle').value,
+                subtitle: document.getElementById('secSubtitle').value,
+                doc: document.getElementById('secDoc').value,
+                items: items
+            }
+        };
+
+        const token = localStorage.getItem('token');
+        try {
+            const res = await fetch(`/api/content/metodologia/reducoes`, { // Rota Fixa
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) { alert('✅ Salvo com sucesso!'); window.location.reload(); }
+            else { alert('Erro ao salvar'); }
+        } catch(e) { console.error(e); alert('Erro de conexão'); }
+    }
+</script>

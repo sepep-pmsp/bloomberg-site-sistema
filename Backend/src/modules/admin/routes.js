@@ -19,6 +19,7 @@ adminRoutes.get('/dashboard-view', AdminPageController.renderDashboard);
 adminRoutes.get('/users-view', AdminPageController.renderUsers);
 adminRoutes.get('/monitor-view', AdminPageController.renderMonitor);
 adminRoutes.get('/docs', AdminPageController.renderApiDocs);
+adminRoutes.get('/pages/metodologia/:sectionKey', AdminPageController.renderMetodologiaSection);
 
 // --- AÇÕES DO PAINEL ---
 adminRoutes.post('/users/delete/:id', AdminPageController.deleteUser);

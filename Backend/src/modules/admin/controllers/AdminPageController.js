@@ -1,5 +1,6 @@
 const User = require('../../../models/User');
 const SecurityLog = require('../../../models/SecurityLog');
+const PageContent = require('../../../models/PageContent');
 const fs = require('fs');
 const ejs = require('ejs');
 const path = require('path');
@@ -99,58 +100,116 @@ class AdminPageController {
     }
   }
 
-    async renderApiDocs(req, res) {
-        const contentPath = path.join(__dirname, '../../api/content');
-        const checkFile = (filename) => fs.existsSync(path.join(contentPath, filename));
+  async renderApiDocs(req, res) {
+    const contentPath = path.join(__dirname, '../../api/content');
+    const checkFile = (filename) => fs.existsSync(path.join(contentPath, filename));
+    const metodologiaOnline = await PageContent.exists({ page: 'metodologia' });
         
-        const filesStatus = {
-            'frota_tabela.json': checkFile('frota_tabela.json'),
-            'frota_pontos.geojson': checkFile('frota_pontos.geojson'),
-            'frota_rotas.geojson': checkFile('frota_rotas.geojson'),
-            'mapas_distritos.json': checkFile('mapas_distritos.json'),
-            'simulacao_monte_carlo.json': checkFile('simulacao_monte_carlo.json')
-        };
+    const filesStatus = {
+        'frota_tabela.json': checkFile('frota_tabela.json'),
+        'frota_pontos.geojson': checkFile('frota_pontos.geojson'),
+        'frota_rotas.geojson': checkFile('frota_rotas.geojson'),
+        'mapas_distritos.json': checkFile('mapas_distritos.json'),
+        'simulacao_monte_carlo.json': checkFile('simulacao_monte_carlo.json'),
+        'mongodb_metodologia': !!metodologiaOnline
+    };
 
-        const endpoints = [
-            { 
-                tag: 'Frota', method: 'GET', path: '/api/frota-tabela', 
-                desc: 'Retorna a lista completa de ônibus.', 
-                response: [{ id: 64460, linha: "502J-10" }], 
-                status: filesStatus['frota_tabela.json']
-            },
-            { 
-                tag: 'Geográfico', method: 'GET', path: '/api/frota-pontos', 
-                desc: 'GeoJSON com posições e calor.', 
-                response: { type: 'FeatureCollection' }, 
-                status: filesStatus['frota_pontos.geojson']
-            },
-            { 
-                tag: 'Geográfico', method: 'GET', path: '/api/frota-rotas', 
-                desc: 'GeoJSON com trajetos das linhas.', 
-                response: { type: 'FeatureCollection' }, 
-                status: filesStatus['frota_rotas.geojson']
-            },
-            { 
-                tag: 'Geográfico', method: 'GET', path: '/api/mapa-distritos', 
-                desc: 'Consolidado por distritos.', 
-                response: { "JABAQUARA": { co2: 15.4 } }, 
-                status: filesStatus['mapas_distritos.json']
-            },
-            { 
-                tag: 'Simulação', method: 'GET', path: '/api/simulacao', 
-                desc: 'Simulação Monte Carlo.', 
-                response: { cenario_50: { media: 0.008 } }, 
-                status: filesStatus['simulacao_monte_carlo.json']
-            }
-        ];
+    const endpoints = [
+        { 
+            tag: 'CMS / Textos', 
+            method: 'GET', 
+            path: '/api/content/metodologia', 
+            desc: 'Retorna todos os textos dinâmicos (Banner, Cenários, Impactos, Reduções).', 
+            response: { 
+                banner_progress: { banner: { title: "..." } },
+                cenarios: { cards: [] },
+                impactos: { doc: "...", items: [] }
+            }, 
+            status: filesStatus['mongodb_metodologia']
+        },
+        { 
+             tag: 'Frota', method: 'GET', path: '/api/frota-tabela', 
+            desc: 'Retorna a lista completa de ônibus.', 
+            response: [{ id: 64460, linha: "502J-10" }], 
+            status: filesStatus['frota_tabela.json']
+        },
+        { 
+            tag: 'Geográfico', method: 'GET', path: '/api/frota-pontos', 
+            desc: 'GeoJSON com posições e calor.', 
+            response: { type: 'FeatureCollection' }, 
+            status: filesStatus['frota_pontos.geojson']
+        },
+        { 
+            tag: 'Geográfico', method: 'GET', path: '/api/frota-rotas', 
+            desc: 'GeoJSON com trajetos das linhas.', 
+            response: { type: 'FeatureCollection' }, 
+            status: filesStatus['frota_rotas.geojson']
+        },
+        { 
+            tag: 'Geográfico', method: 'GET', path: '/api/mapa-distritos', 
+            desc: 'Consolidado por distritos.', 
+            response: { "JABAQUARA": { co2: 15.4 } }, 
+            status: filesStatus['mapas_distritos.json']
+        },
+        { 
+            tag: 'Simulação', method: 'GET', path: '/api/simulacao', 
+            desc: 'Simulação Monte Carlo.', 
+            response: { cenario_50: { media: 0.008 } }, 
+            status: filesStatus['simulacao_monte_carlo.json']
+        }
+    ];
 
         return res.render('admin/pages/api-docs', {
             endpoints,
             filesStatus,
             user: req.user || { nome: "Admin", avatar: "/images/avatars/admin-avatar.svg" },
-            title: 'CODATA API Docs'
+            title: 'Integração e Catálogo de Dados' 
         });
+  }
+
+  async renderMetodologiaSection(req, res) {
+    try {
+      const { sectionKey } = req.params; 
+      const data = await PageContent.findOne({ page: 'metodologia', section: sectionKey }).lean();
+      
+      const content = data ? data.content : {};
+      const currentUser = req.user || { nome: "Admin", avatar: "/images/avatars/admin-avatar.svg" };
+      let viewFile = '';
+      let pageTitle = '';
+
+      switch(sectionKey) {
+          case 'banner_progress':
+              viewFile = 'admin/pages/metodologia/banner_progress';
+              pageTitle = 'Editar Banner & Progresso';
+              break;
+          case 'cenarios':
+              viewFile = 'admin/pages/metodologia/cenarios';
+              pageTitle = 'Editar Cenários';
+              break;
+          case 'impactos':
+              viewFile = 'admin/pages/metodologia/impactos';
+              pageTitle = 'Editar Impactos na Saúde';
+              break;
+          case 'reducoes':
+              viewFile = 'admin/pages/metodologia/reducoes';
+              pageTitle = 'Editar Reduções';
+              break;
+          default:
+              return res.redirect('/admin/dashboard-view');
+      }
+
+      return res.render(viewFile, {
+        user: currentUser,
+        pageTitle: pageTitle,
+        content: content,
+        sectionKey: sectionKey // Passamos a chave para o EJS saber onde salvar (API)
+      });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Erro: ' + error.message);
     }
+  }
 }
 
 module.exports = new AdminPageController();

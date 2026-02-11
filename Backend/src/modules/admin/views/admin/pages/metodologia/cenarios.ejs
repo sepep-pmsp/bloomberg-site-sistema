@@ -1,0 +1,94 @@
+<% layout('admin/layout') -%>
+<div class="p-6 bg-gray-50 min-h-screen">
+  <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Editar: Cenários</h1>
+      <button onclick="saveCenarios()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow transition flex items-center gap-2">
+        <i class="fas fa-save"></i> Salvar Alterações
+      </button>
+  </div>
+  
+  <form id="cenariosForm" class="space-y-6 max-w-5xl mx-auto">
+      
+      <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+          <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+            <i class="fas fa-heading mr-2"></i> Títulos da Seção
+          </h2>
+          <div class="grid gap-4">
+              <div>
+                  <label class="block font-bold text-gray-700">Título Principal</label>
+                  <input type="text" id="secTitle" value="<%= content.title %>" class="w-full border p-2 rounded focus:ring-green-500">
+              </div>
+              <div>
+                  <label class="block font-bold text-gray-700">Subtítulo</label>
+                  <input type="text" id="secSubtitle" value="<%= content.subtitle %>" class="w-full border p-2 rounded focus:ring-green-500">
+              </div>
+          </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+          <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+            <i class="fas fa-layer-group mr-2"></i> Cards Informativos
+          </h2>
+          
+          <div class="grid md:grid-cols-3 gap-6">
+              <% content.cards.forEach((card, index) => { %>
+                  <div class="card-group bg-gray-50 p-4 rounded border border-gray-300 relative">
+                      <span class="absolute top-2 right-2 text-xs font-bold text-gray-400">Card #<%= index + 1 %></span>
+                      
+                      <label class="block text-xs font-bold text-gray-500 mb-1">Ícone</label>
+                      <select class="card-icon w-full border p-2 rounded mb-3 bg-white">
+                          <option value="bus" <%= card.icon === 'bus' ? 'selected' : '' %>>🚌 Ônibus</option>
+                          <option value="globe" <%= card.icon === 'globe' ? 'selected' : '' %>>🌍 Globo/Temp</option>
+                          <option value="cloud" <%= card.icon === 'cloud' ? 'selected' : '' %>>☁️ Nuvem</option>
+                      </select>
+                      
+                      <label class="block text-xs font-bold text-gray-500 mb-1">Texto</label>
+                      <textarea class="card-desc w-full border p-2 rounded h-40 text-sm" placeholder="Texto do card..."><%= card.description %></textarea>
+                      
+                      <input type="hidden" class="card-id" value="<%= card.id %>">
+                  </div>
+              <% }) %>
+          </div>
+      </div>
+  </form>
+</div>
+
+<script>
+    async function saveCenarios() {
+        const cards = [];
+        // Coleta dados de cada card
+        document.querySelectorAll('.card-group').forEach((group, idx) => {
+            cards.push({
+                id: idx, // Recria os IDs em ordem
+                icon: group.querySelector('.card-icon').value,
+                description: group.querySelector('.card-desc').value
+            });
+        });
+
+        const payload = {
+            content: {
+                title: document.getElementById('secTitle').value,
+                subtitle: document.getElementById('secSubtitle').value,
+                cards: cards
+            }
+        };
+
+        const token = localStorage.getItem('token'); 
+
+        try {
+            const res = await fetch('/api/content/metodologia/cenarios', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(payload)
+            });
+            
+            if(res.ok) {
+                alert('✅ Cenários atualizados com sucesso!');
+                window.location.reload();
+            } else {
+                const err = await res.json();
+                alert('❌ Erro: ' + JSON.stringify(err));
+            }
+        } catch(e) { console.error(e); alert('Erro de conexão'); }
+    }
+</script>
