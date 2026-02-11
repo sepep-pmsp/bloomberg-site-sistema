@@ -4,6 +4,8 @@ const LoginController = require('./controllers/login/LoginController');
 const ForgotPasswordController = require('./controllers/login/ForgotPasswordController');
 const ProfileController = require('./controllers/profile/ProfileController');
 const authMiddleware = require('./middlewares/auth');
+const fs = require('fs');
+const path = require('path');
 
 // AJUSTE DE CAMINHO: Baseado na sua estrutura de pastas enviada
 const ContentController = require('./controllers/service/ContentController'); 
