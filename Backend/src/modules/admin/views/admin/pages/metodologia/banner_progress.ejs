@@ -1,0 +1,142 @@
+<% layout('admin/layout') -%>
+
+<div class="p-6 bg-gray-50 min-h-screen">
+  
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Editar Página: Metodologia</h1>
+    <button onclick="saveContent()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg shadow transition flex items-center gap-2">
+      <i class="fas fa-save"></i> Salvar Alterações
+    </button>
+  </div>
+
+  <form id="metodologiaForm" class="space-y-8 max-w-5xl mx-auto">
+    
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+        <i class="fas fa-image mr-2"></i> Banner Principal
+      </h2>
+      
+      <div class="grid gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Título Principal</label>
+          <input type="text" id="bannerTitle" value="<%= content.banner.title %>" class="w-full p-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500">
+          <p class="text-xs text-gray-500 mt-1">Use &lt;br/&gt; para quebrar a linha.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Subtítulo</label>
+          <textarea id="bannerSubtitle" rows="2" class="w-full p-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"><%= content.banner.subtitle %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+        <i class="fas fa-bus mr-2"></i> Barra de Progresso
+      </h2>
+
+      <div class="grid gap-6">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Título da Seção</label>
+            <input type="text" id="progressTitle" value="<%= content.progressBar.title %>" class="w-full p-2 border border-gray-300 rounded">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+            <textarea id="progressDesc" rows="3" class="w-full p-2 border border-gray-300 rounded"><%= content.progressBar.description %></textarea>
+          </div>
+        </div>
+
+        <hr class="my-2">
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-50 p-4 rounded border">
+                <h3 class="font-bold text-gray-700 mb-2">Veículos já substituídos</h3>
+                <label class="text-xs text-gray-500">Número</label>
+                <input type="number" id="currValue" value="<%= content.progressBar.currentValue[0].value %>" class="w-full mb-2 p-1 border rounded">
+                <label class="text-xs text-gray-500">Label (Texto)</label>
+                <input type="text" id="currLabel" value="<%= content.progressBar.currentValue[0].label %>" class="w-full p-1 border rounded">
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded border">
+                <h3 class="font-bold text-gray-700 mb-2">Veículos eletrificados até 2028</h3>
+                <label class="text-xs text-gray-500">Número</label>
+                <input type="number" id="maxValue" value="<%= content.progressBar.maxValue[0].value %>" class="w-full mb-2 p-1 border rounded">
+                <label class="text-xs text-gray-500">Label (Texto)</label>
+                <input type="text" id="maxLabel" value="<%= content.progressBar.maxValue[0].label %>" class="w-full p-1 border rounded">
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded border">
+                <h3 class="font-bold text-gray-700 mb-2">Veículos eletrificados em 2025</h3>
+                <label class="text-xs text-gray-500">Número</label>
+                <input type="number" id="interValue" value="<%= content.progressBar.intermediateValue[0].value %>" class="w-full mb-2 p-1 border rounded">
+                <label class="text-xs text-gray-500">Label (Texto)</label>
+                <input type="text" id="interLabel" value="<%= content.progressBar.intermediateValue[0].label %>" class="w-full p-1 border rounded">
+            </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  async function saveContent() {
+    // 1. Montar o Objeto JSON igual ao Schema do Banco
+    const payload = {
+      content: {
+        banner: {
+          title: document.getElementById('bannerTitle').value,
+          subtitle: document.getElementById('bannerSubtitle').value,
+          backgroundImage: "/images/banner.svg" // Mantemos fixo ou adicionamos input se quiser mudar img
+        },
+        progressBar: {
+          title: document.getElementById('progressTitle').value,
+          description: document.getElementById('progressDesc').value,
+          currentValue: [{
+            value: Number(document.getElementById('currValue').value),
+            label: document.getElementById('currLabel').value
+          }],
+          maxValue: [{
+            value: Number(document.getElementById('maxValue').value),
+            label: document.getElementById('maxLabel').value
+          }],
+          intermediateValue: [{
+            value: Number(document.getElementById('interValue').value),
+            label: document.getElementById('interLabel').value
+          }]
+        }
+      }
+    };
+
+    try {
+      // 2. Enviar para a API (PUT)
+      // OBS: Aqui assume-se que o Admin tem o token nos cookies ou localStorage.
+      // Se o seu admin usa cookies HTTP-only, o fetch envia automático.
+      // Se usa localStorage, precisamos pegar o token.
+      
+      const token = localStorage.getItem('token'); // Ajuste se o nome for outro
+
+      const response = await fetch('/api/content/metodologia/banner_progress', { // <--- ROTA CORRETA
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Envia o token se existir
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        alert('✅ Conteúdo atualizado com sucesso!');
+        // Opcional: Recarregar a página para garantir sincronia
+        window.location.reload(); 
+      } else {
+        const err = await response.json();
+        alert('❌ Erro ao salvar: ' + (err.error || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error(error);
+      alert('❌ Erro de conexão com o servidor.');
+    }
+  }
+</script>
