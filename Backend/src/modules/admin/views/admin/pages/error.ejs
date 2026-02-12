@@ -1,0 +1,13 @@
+<%- include('../layout') %>
+
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <div class="bg-red-50 p-8 rounded-full mb-6">
+        <i class="fas fa-exclamation-triangle text-red-500 text-5xl"></i>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Ops! Algo deu errado.</h1>
+    <p class="text-gray-600 max-w-md mb-8"><%= message || 'Ocorreu um erro inesperado ao processar sua solicitação.' %></p>
+    
+    <a href="/admin/dashboard-view" class="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition">
+        Voltar para o Dashboard
+    </a>
+</div>
