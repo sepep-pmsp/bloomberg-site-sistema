@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MathRenderer from './MathRenderer';
 
 export default function AccordeonLateral({ items, theme }) {
     const [activeId, setActiveId] = useState(items[0]?.id || 0);
@@ -21,9 +22,10 @@ export default function AccordeonLateral({ items, theme }) {
                             {item.number}
                         </span>
                         <div className="accordion__content">
-                            <p className="text-lg 2xl:!text-xl leading-relaxed pr-16 font-medium" style={{ color: colors.textColor }}>
-                                {item.description}
-                            </p>
+                            <MathRenderer 
+                                text={item.description} 
+                                color={colors.textColor} 
+                            />
                         </div>
                     </li>
                 );
