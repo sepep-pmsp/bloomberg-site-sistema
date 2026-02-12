@@ -3,17 +3,20 @@ import CardHover from '../components/CardHover'
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
-export default function Cenarios() {
+export default function Cenarios({ content }) {
+    if (!content) return null;
+    const { title, subtitle, cards } = content;
+
     return (
         <div className='w-screen h-full 2xl:h-[170vh]'>
             <div className='flex flex-col justify-center items-center' style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
                 <div className='pt-28 flex flex-col gap-10 mb-16'>
-                    <h2 className='text-3xl 2xl:!text-[64px] text-center capitalize w-full '>Como construímos <br /> cenários?</h2>
-                    <h4 className='text-center 2xl:!text-4xl'>Entenda como funcionam as<br /> análises apresentadas</h4>
+                    <h2 className='text-3xl 2xl:!text-[64px] text-center capitalize w-full' dangerouslySetInnerHTML={{ __html: title }}/>
+                    <h4 className='text-center 2xl:!text-4xl' dangerouslySetInnerHTML={{ __html: subtitle }}/>
                 </div>
             </div>
-            <span className='w-full relative top-10'>
-                    <CardHover />
+            <span className='w-full relative bottom-25'>
+                    <CardHover items={cards}/>
             </span>
             <div className='w-full relative bottom-15 -z-1 2xl:h-[45rem] select-none pointer-events-none max-lg:hidden -translate-y-1/2'>
                 <svg viewBox="0 0 1440 601" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto min-w-[1000px] lg:min-w-full" preserveAspectRatio="none">

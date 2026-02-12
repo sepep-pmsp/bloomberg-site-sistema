@@ -153,3 +153,7 @@
         background-color: var(--green-600);
     }
 }
+
+.font-heading-primary{
+    font-family: var(--font-heading-primary);
+}
