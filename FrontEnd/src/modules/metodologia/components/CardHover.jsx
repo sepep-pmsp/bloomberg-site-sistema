@@ -7,23 +7,24 @@ import useLockHorizontalScrollMd from '../hook/useLockHorizontalScrollMd'
 import { motion } from 'framer-motion'; 
 
 
-export default function CardHover() {
+export default function CardHover({ items }) {
     useLockHorizontalScrollMd();
+    const iconMap = {
+        'bus': BusIcon,
+        'globe': GlobeIcon,
+        'cloud': CloudIcon
+    };
+    const cardItens = items || [];
 
-    const cardItens = [
-        { id: 0, icon: BusIcon, description: "A velha sabedoria do Ocidente foi esquecida. Os reis fizeram tumbas mais belas que as casas dos vivos, dando mais valor ao nome de seus ancestrais do que aos dos seus filhos.Gandalf" },
-        { id: 1, icon: GlobeIcon, description: "Um Anel para a todos governar, Um Anel para encontrá-los, Um Anel para a todos trazer e na escuridão aprisioná-los, Na Terra de Mordor onde as Sombras jazem." },
-        { id: 2, icon: CloudIcon, description: "Tudo o que temos de decidir é o que fazer com o tempo que nos é dado.Gandalf " },
-    ];
     return (
         <div className="relative w-full flex items-center justify-center overflow-hidden h-[62%]">
-            <div className="flex flex-wrap justify-center gap-10 z-10 relative">
+            <div className="flex flex-wrap justify-center gap-10 z-10 h-full relative top-40">
                 {cardItens.map(item => (
-                    <div key={item.id} className="group relative w-[300px] h-[40rem] flex items-start cursor-pointer justify-center overflow-hidden">
+                    <div key={item.id} className="group relative w-[300px] flex items-start cursor-pointer justify-center overflow-hidden">
                         <div className="absolute top-4 left-8 h-60 w-60 bg-[var(--green-800)] flex items-center justify-center rounded-full z-10">
-                            <img src={item.icon} className="w-24 h-24 object-contain select-none pointer-events-none"/>
+                            <img src={iconMap[item.icon] || BusIcon} className="w-24 h-24 object-contain select-none pointer-events-none"/>
                         </div>
-                        <div className="absolute top-48 left-8 md:h-1 md:group-hover:h-120 w-60 bg-[var(--green-600)] rounded-2xl h-120 px-6 py-5 text-[var(--color-primary-light)] translate-y-[-80px] transition-all duration-500 ease-out shadow-2xl flex flex-col justify-end overflow-y-auto group-hover:shadow-2xl">
+                        <div className="absolute top-48 left-8 md:h-1 md:group-hover:h-170 w-60 bg-[var(--green-600)] rounded-2xl h-120 px-6 py-5 text-[var(--color-primary-light)] translate-y-[-80px] transition-all duration-500 ease-out shadow-2xl flex flex-col justify-end overflow-y-auto group-hover:shadow-2xl">
                             <p className="text-center text-sm leading-relaxed">
                                 {item.description}
                             </p>
