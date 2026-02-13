@@ -81,62 +81,71 @@
 </div>
 
 <script>
-  async function saveContent() {
-    // 1. Montar o Objeto JSON igual ao Schema do Banco
-    const payload = {
-      content: {
-        banner: {
-          title: document.getElementById('bannerTitle').value,
-          subtitle: document.getElementById('bannerSubtitle').value,
-          backgroundImage: "/images/banner.svg" // Mantemos fixo ou adicionamos input se quiser mudar img
-        },
-        progressBar: {
-          title: document.getElementById('progressTitle').value,
-          description: document.getElementById('progressDesc').value,
-          currentValue: [{
-            value: Number(document.getElementById('currValue').value),
-            label: document.getElementById('currLabel').value
-          }],
-          maxValue: [{
-            value: Number(document.getElementById('maxValue').value),
-            label: document.getElementById('maxLabel').value
-          }],
-          intermediateValue: [{
-            value: Number(document.getElementById('interValue').value),
-            label: document.getElementById('interLabel').value
-          }]
+    async function saveContent() {
+        const btn = document.querySelector('button[onclick="saveContent()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> Salvando...';
+        btn.disabled = true;
+
+        try {
+            const getInt = (id) => {
+                const val = document.getElementById(id).value;
+                return val ? parseInt(val) : 0;
+            };
+
+            const payload = {
+                content: {
+                    banner: {
+                        title: document.getElementById('bannerTitle').value,
+                        subtitle: document.getElementById('bannerSubtitle').value,
+                        backgroundImage: document.getElementById('bannerImage') ? document.getElementById('bannerImage').value : ''
+                    },
+                    progressBar: {
+                        title: document.getElementById('progressTitle').value,
+                        description: document.getElementById('progressDesc').value,
+                        currentValue: [{
+                            label: document.getElementById('currLabel').value,
+                            value: getInt('currValue')
+                        }],
+                        maxValue: [{
+                            label: document.getElementById('maxLabel').value,
+                            value: getInt('maxValue')
+                        }],
+                        intermediateValue: [{
+                            label: document.getElementById('interLabel').value,
+                            value: getInt('interValue')
+                        }]
+                    }
+                }
+            };
+
+            const res = await fetch('/api/content/metodologia/banner_progress', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', 
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert('✅ Conteúdo atualizado com sucesso!');
+                window.location.reload();
+            } else {
+                const errorText = await res.text();
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    alert('Erro ao salvar: ' + (errorJson.error || 'Erro desconhecido'));
+                } catch {
+                    console.error('Erro HTML do servidor:', errorText);
+                    alert('Erro interno do servidor (Verifique o terminal do VSCode).');
+                }
+            }
+
+        } catch (error) {
+            console.error('Erro no Script:', error);
+            alert('Erro de conexão ou erro no script.');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         }
-      }
-    };
-
-    try {
-      // 2. Enviar para a API (PUT)
-      // OBS: Aqui assume-se que o Admin tem o token nos cookies ou localStorage.
-      // Se o seu admin usa cookies HTTP-only, o fetch envia automático.
-      // Se usa localStorage, precisamos pegar o token.
-      
-      const token = localStorage.getItem('token'); // Ajuste se o nome for outro
-
-      const response = await fetch('/api/content/metodologia/banner_progress', { // <--- ROTA CORRETA
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Envia o token se existir
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        alert('✅ Conteúdo atualizado com sucesso!');
-        // Opcional: Recarregar a página para garantir sincronia
-        window.location.reload(); 
-      } else {
-        const err = await response.json();
-        alert('❌ Erro ao salvar: ' + (err.error || 'Erro desconhecido'));
-      }
-    } catch (error) {
-      console.error(error);
-      alert('❌ Erro de conexão com o servidor.');
     }
-  }
 </script>

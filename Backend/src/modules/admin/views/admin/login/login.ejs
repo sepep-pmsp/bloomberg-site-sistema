@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login Administrativo - CODATA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/svg+xml" href="/images/icon-codata.svg" />
 </head>
 <body class="bg-[#0A290F] h-screen flex items-center justify-center">
     <div class="bg-[#EBFAED] p-8 rounded-2xl shadow-2xl w-full max-w-md">
@@ -12,7 +13,7 @@
             <p class="text-slate-500 text-sm">Acesso restrito a administradores</p>
         </div>
 
-        <% if (error) { %>
+        <% if (locals.error) { %>
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 mb-4 text-sm">
                 <%= error %>
             </div>
@@ -38,7 +39,7 @@
         </form>
         
         <div class="mt-6 text-center">
-            <a href="/" class="text-xs text-[#48D1AA] hover:underline">Voltar para o site principal</a>
+            <a href="http://10.80.14.29/#/login" class="text-xs text-[#48D1AA] hover:underline">Voltar para o site principal</a>
         </div>
     </div>
 </body>

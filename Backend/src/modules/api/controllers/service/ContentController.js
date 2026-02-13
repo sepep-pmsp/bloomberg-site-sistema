@@ -1,44 +1,50 @@
 const PageContent = require('../../../../models/PageContent');
 
 module.exports = {
-  // 1. Busca todo o conteúdo de uma página específica
   async getPageContent(req, res) {
-    const { pageName } = req.params;
-
     try {
-      const contents = await PageContent.find({ page: pageName });
-      
-      // Transforma o array do banco em um objeto mais fácil pro front usar
-      // Ex: { banner: { title: '...' }, reducoes: { ... } }
-      const formatted = {};
-      contents.forEach(item => {
-        formatted[item.section] = item.content;
+      const { pageName } = req.params;
+      const sections = await PageContent.find({ page: pageName });
+      const response = {};
+      sections.forEach(doc => {
+        response[doc.section] = doc.content;
       });
 
-      return res.json(formatted);
+      return res.json(response);
     } catch (error) {
-      return res.status(500).json({ error: 'Erro ao buscar conteúdo' });
+      console.error('Erro ao buscar conteúdo:', error);
+      return res.status(500).json({ error: 'Erro ao buscar dados.' });
     }
   },
 
-  // 2. Atualiza (ou cria) uma seção específica
   async updateSection(req, res) {
-    const { pageName, sectionKey } = req.params;
-    const { content } = req.body; // O JSON novo com os textos
-
     try {
-      const updated = await PageContent.findOneAndUpdate(
+      const { pageName, sectionKey } = req.params;
+      const { content } = req.body; 
+      let userIdToSave = null;
+      const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+
+      if (req.userId && isValidObjectId(req.userId)) {
+          userIdToSave = req.userId;
+      }
+      const updateData = { 
+        content,
+        updatedAt: Date.now()
+      };
+      if (userIdToSave) {
+        updateData.lastUpdatedBy = userIdToSave;
+      }
+      const updatedDoc = await PageContent.findOneAndUpdate(
         { page: pageName, section: sectionKey },
-        { 
-          content,
-          lastUpdatedBy: req.userId // Pega do middleware de auth
-        },
-        { new: true, upsert: true } // Cria se não existir
+        updateData,
+        { new: true, upsert: true, setDefaultsOnInsert: true }
       );
 
-      return res.json(updated);
+      return res.json({ success: true, data: updatedDoc });
+
     } catch (error) {
-      return res.status(500).json({ error: 'Erro ao atualizar conteúdo' });
+      console.error('❌ Erro no ContentController:', error);
+      return res.status(500).json({ error: 'Erro ao atualizar conteúdo. Verifique o terminal.' });
     }
   }
 };
