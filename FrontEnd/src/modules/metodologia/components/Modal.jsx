@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Modal({ isOpen, onClose, title, children }) {
+export default function Modal({ isOpen, onClose, title, footerContent, children }) {
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') onClose();
@@ -51,6 +51,11 @@ export default function Modal({ isOpen, onClose, title, children }) {
 
               {/* RODAPÉ (Opcional) */}
               <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <div className="text-sm text-gray-500 italic">
+                    {footerContent && (
+                        <span dangerouslySetInnerHTML={{ __html: footerContent }} />
+                    )}
+                </div>
                 <button onClick={onClose} className="px-6 py-2 bg-[var(--green-600)] text-white rounded-lg hover:bg-[var(--green-800)] transition font-semibold">
                   Fechar
                 </button>

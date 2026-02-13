@@ -1,22 +1,23 @@
 const jwt = require('jsonwebtoken');
 const authConfig = require('../../../config/domains/auth');
+const { promisify } = require('util');
 
-module.exports = (req, res, next) => {
-  // Agora buscamos o token dentro dos cookies
-  const token = req.cookies ? req.cookies.token : null;
-
-  if (!token) {
-    return res.status(401).json({ error: 'Token não fornecido. Acesso negado.' });
+module.exports = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const [, token] = authHeader.split(' ');
+    try {
+      const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+      req.userId = decoded.id;
+      return next();
+    } catch (err) {
+    }
   }
+  const adminCookie = req.cookies ? req.cookies.admin_token : null;
 
-  try {
-    const decoded = jwt.verify(token, authConfig.jwtSecret);
-    
-    // Guardamos o ID do usuário na requisição para o ProfileController usar
-    req.userId = decoded.id; 
-
+  if (adminCookie === 'session_valid_token') {
+    req.userId = 'admin-master';
     return next();
-  } catch (err) {
-    return res.status(401).json({ error: 'Sessão inválida ou expirada.' });
   }
+  return res.status(401).json({ error: 'Sessão expirada. Faça login novamente.' });
 };

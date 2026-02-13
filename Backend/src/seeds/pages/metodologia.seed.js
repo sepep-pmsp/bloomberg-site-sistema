@@ -88,6 +88,8 @@ const seedMetodologia = async () => {
         content: {
           title: "COMO ESTIMAMOS O<br /> IMPACTO NA SAÚDE?",
           subtitle: "Entenda como funciona a estimativa de impacto da eletrificação da <br /> frota de ônibus na saúde da população",
+          modalTitle: "Metodologia Detalhada: Impactos na Saúde",
+          modalFooter: "Fonte: SPTrans e IBGE (2022)",
           doc: `Além disso, estima-se o efeito da emissão dos poluentes na saúde dos residentes da cidade. Os poluentes analisados apresentam comportamentos de emissão distintos. O CO₂ possui impacto global e baixa relevância territorial direta. Já o NOₓ e o MP produzem efeitos locais e imediatos sobre a qualidade do ar e a saúde da população. Portanto, a mensuração do impacto na saúde se dá pela população potencialmente afetada pela emissão de NOₓ e MP dos trajetos dos ônibus em circulação.
 
             Para isso, utiliza-se os setores censitários do IBGE (2022). A partir dos trajetos dos ônibus, ao redor deles aplica-se um buffer espacial de [incluir] metros para o NOₓ e  [incluir] metros para o MP, de modo a representar a área potencialmente afetada pela emissão da circulação dos ônibus. Os buffers dos trajetos são então sobrepostos aos setores censitários do município, por meio de uma operação de interseção espacial. Essa etapa permite identificar as porções dos setores que se encontram dentro da área de influência dos ônibus. Para evitar geometrias de interseções muito pequenas, áreas residuais sem relevância espacial são descartadas.
@@ -127,6 +129,8 @@ const seedMetodologia = async () => {
         content: {
           title: "COMO ESTIMAMOS <br /> AS REDUÇÕES?",
           subtitle: "Entenda como funcionam as análises apresentadas",
+          modalTitle: "Metodologia Detalhada: Estimativa de Reduções de Emissões",
+          modalFooter: `Nota técnica: Cálculos baseados na instrução normativa nº 11.`,
           doc: `A metodologia adotada neste projeto foi desenvolvida para estimar os impactos da política de eletrificação da frota de ônibus do município de São Paulo, estruturando-se em duas etapas complementares: diagnóstico e prognóstico.
 
             Na etapa de diagnóstico, o projeto faz uso da API do Olho Vivo, disponibilizada pela SPTrans, que fornece em regime de quase tempo real (near real time) a posição geográfica (latitude e longitude) de todos os ônibus em operação no município de São Paulo. Foi construído um sistema automatizado que realiza a coleta dessas informações a cada minuto, possibilitando a reconstrução dos trajetos individuais de cada veículo ao longo do dia. A partir da sequência temporal de posições sucessivas, são calculadas as distâncias percorridas em cada intervalo e, posteriormente, consolidada a quilometragem diária percorrida por veículo.

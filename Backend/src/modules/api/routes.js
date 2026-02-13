@@ -9,10 +9,6 @@ const path = require('path');
 
 // AJUSTE DE CAMINHO: Baseado na sua estrutura de pastas enviada
 const ContentController = require('./controllers/service/ContentController'); 
-
-const fs = require('fs');
-const path = require('path');
-
 const apiRoutes = Router();
 
 // --- ROTAS PÚBLICAS DA API ---

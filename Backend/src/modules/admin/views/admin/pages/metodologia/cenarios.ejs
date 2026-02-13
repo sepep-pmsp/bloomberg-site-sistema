@@ -55,30 +55,38 @@
 
 <script>
     async function saveCenarios() {
-        const cards = [];
-        // Coleta dados de cada card
-        document.querySelectorAll('.card-group').forEach((group, idx) => {
-            cards.push({
-                id: idx, // Recria os IDs em ordem
-                icon: group.querySelector('.card-icon').value,
-                description: group.querySelector('.card-desc').value
-            });
-        });
-
-        const payload = {
-            content: {
-                title: document.getElementById('secTitle').value,
-                subtitle: document.getElementById('secSubtitle').value,
-                cards: cards
-            }
-        };
-
-        const token = localStorage.getItem('token'); 
+        const btn = document.querySelector('button[onclick="saveCenarios()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> Salvando...';
+        btn.disabled = true;
 
         try {
+            const cards = [];
+            const cardGroups = document.querySelectorAll('.card-group');
+            
+            cardGroups.forEach((group, idx) => {
+                const iconInput = group.querySelector('.card-icon');
+                const descInput = group.querySelector('.card-desc');
+                
+                if (iconInput && descInput) {
+                    cards.push({
+                        id: idx,
+                        icon: iconInput.value,
+                        description: descInput.value
+                    });
+                }
+            });
+            const payload = {
+                content: {
+                    title: document.getElementById('secTitle').value,
+                    subtitle: document.getElementById('secSubtitle').value,
+                    cards: cards
+                }
+            };
             const res = await fetch('/api/content/metodologia/cenarios', {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(payload)
             });
             
@@ -86,9 +94,21 @@
                 alert('✅ Cenários atualizados com sucesso!');
                 window.location.reload();
             } else {
-                const err = await res.json();
-                alert('❌ Erro: ' + JSON.stringify(err));
+                const errorText = await res.text();
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    alert('Erro ao salvar: ' + (errorJson.error || 'Erro desconhecido'));
+                } catch {
+                    console.error('Erro HTML do servidor:', errorText);
+                    alert('Erro interno do servidor (Verifique o terminal do VSCode).');
+                }
             }
-        } catch(e) { console.error(e); alert('Erro de conexão'); }
+        } catch(e) { 
+            console.error('Erro no Script JS:', e); 
+            alert('Erro de conexão ou erro no script (Veja o Console F12).'); 
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 </script>

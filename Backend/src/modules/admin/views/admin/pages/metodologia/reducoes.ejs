@@ -23,17 +23,36 @@
                       <input type="text" id="secSubtitle" value="<%= content.subtitle %>" class="w-full border p-2 rounded">
                   </div>
               </div>
-              <div>
-                  <label class="block font-bold text-gray-700">Texto Técnico (Doc)</label>
-                  <textarea id="secDoc" class="w-full border p-3 rounded bg-gray-50 leading-relaxed font-mono text-sm" rows="12"><%= content.doc || '' %></textarea>
-              </div>
           </div>
       </div>
+
+        <div class="bg-white p-6 rounded-xl shadow border border-gray-200 mt-6">
+            <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">
+                <i class="fas fa-window-restore mr-2 text-green-800"></i> Configuração do Modal ( botão = Saiba Mais )
+            </h2>
+            <div class="grid gap-4">
+                <div>
+                    <label class="block font-bold text-gray-700">Título do Modal</label>
+                    <input type="text" id="modalTitle" value="<%= content.modalTitle || 'Metodologia Detalhada' %>" class="w-full border p-2 rounded focus:ring-blue-500 bg-blue-50">
+                </div>
+                <div>
+                  <label class="block font-bold text-gray-700">Texto Explicativo (Texto corrido dentro do Modal)</label>
+                  <textarea id="secDoc" class="w-full border p-3 rounded bg-gray-50 leading-relaxed font-mono text-sm" rows="12"><%= content.doc || '' %></textarea>
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700">Rodapé do Modal</label>
+                    <div class="text-[10px] text-gray-500 mb-1">
+                        Pode incluir texto de fonte, notas ou avisos.
+                    </div>
+                    <input type="text" id="modalFooter" value="<%= content.modalFooter || '' %>" class="w-full border p-2 rounded focus:ring-blue-500 bg-blue-50">
+                </div>
+            </div>
+        </div>
 
       <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
           <h2 class="text-xl font-semibold text-green-800 mb-4 border-b pb-2">Itens com Fórmulas</h2>
           
-          <div class="bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded mb-6 flex items-start gap-3">
+          <div class="bg-blue-50 border border-blue-200 text-green-700 p-4 rounded mb-6 flex items-start gap-3">
               <i class="fas fa-calculator mt-1"></i>
               <div>
                   <h3 class="font-bold text-sm">Como adicionar fórmulas matemáticas?</h3>
@@ -64,33 +83,53 @@
 
 <script>
     async function saveReducoes() {
-        const items = [];
-        document.querySelectorAll('.item-group').forEach((group, idx) => {
-            items.push({
-                id: idx,
-                number: group.querySelector('.item-number').value,
-                description: group.querySelector('.item-desc').value
-            });
-        });
+        const btn = document.querySelector('button[onclick="saveReducoes()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> Salvando...';
+        btn.disabled = true;
 
-        const payload = {
-            content: {
-                title: document.getElementById('secTitle').value,
-                subtitle: document.getElementById('secSubtitle').value,
-                doc: document.getElementById('secDoc').value,
-                items: items
-            }
-        };
-
-        const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`/api/content/metodologia/reducoes`, { // Rota Fixa
+            const items = [];
+            document.querySelectorAll('.item-group').forEach((group, idx) => {
+                items.push({
+                    id: idx,
+                    number: group.querySelector('.item-number').value,
+                    description: group.querySelector('.item-desc').value
+                });
+            });
+            const payload = {
+                content: {
+                    title: document.getElementById('secTitle').value,
+                    subtitle: document.getElementById('secSubtitle').value,
+                    doc: document.getElementById('secDoc').value,
+                    modalTitle: document.getElementById('modalTitle')?.value || '',
+                    modalFooter: document.getElementById('modalFooter')?.value || '',
+                    items: items
+                }
+            };
+            const res = await fetch('/api/content/metodologia/reducoes', {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
                 body: JSON.stringify(payload)
             });
-            if(res.ok) { alert('✅ Salvo com sucesso!'); window.location.reload(); }
-            else { alert('Erro ao salvar'); }
-        } catch(e) { console.error(e); alert('Erro de conexão'); }
+
+            if(res.ok) { 
+                alert('✅ Reduções salvas com sucesso!'); 
+                window.location.reload(); 
+            } else { 
+                const errorData = await res.json().catch(() => ({}));
+                alert('Erro ao salvar: ' + (errorData.error || res.statusText)); 
+            }
+
+        } catch(e) { 
+            console.error(e); 
+            alert('Erro de conexão ou erro no script.'); 
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     }
 </script>
