@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function Impactos({ content }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     if (!content) return null;
-    const { title, subtitle, doc, items } = content;
+    const { title, subtitle, doc, items, modalTitle, modalFooter } = content;
 
     const impactosTheme = {
         activeBg: "var(--green-400)",
@@ -42,7 +42,7 @@ export default function Impactos({ content }) {
                     <motion.path d="M-148 355.911C-45.2315 345.924 1288.61 516.007 1341.21 415.337C1406.96 289.498 566.461 286.842 866 117.26C1165.54 -52.3223 1437.76 -13.9716 1391 117.26C1344.24 248.491 850.743 389.624 631.484 436.208C388.93 487.742 -52.3395 566.241 54.3256 355.911C160.991 145.582 -331.422 194.119 -479 260.035" stroke="#CEFA05" strokeWidth="8" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 1, opacity: 1 }} viewport={{ once: true, margin: "0px 0px -200px 0px" }} transition={{ duration: 2.5, ease: "easeInOut" }}/>
                 </svg>
             </div>
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Metodologia Detalhada: Impactos na Saúde">
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={modalTitle || "Metodologia Detalhada: Reduções"} footerContent={modalFooter} >
                 {doc}
             </Modal>
         </div>
