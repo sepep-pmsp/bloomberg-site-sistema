@@ -47,6 +47,19 @@ apiRoutes.get('/mapa-distritos', (req, res) => {
     }
 });
 
+apiRoutes.get('/totais-gerais', (req, res) => {
+    try {
+        const dataPath = path.join(__dirname, 'content/totais_gerais_silver.json');
+        if (!fs.existsSync(dataPath)) {
+            return res.status(404).json({ error: "Totais gerais não encontrados." });
+        }
+        const data = fs.readFileSync(dataPath, 'utf8');
+        res.json(JSON.parse(data));
+    } catch (err) {
+        res.status(500).json({ error: "Erro ao ler base de totais." });
+    }
+});
+
 apiRoutes.get('/simulacao', (req, res) => {
     try {
         const dataPath = path.join(__dirname, 'content/simulacao_monte_carlo.json');
