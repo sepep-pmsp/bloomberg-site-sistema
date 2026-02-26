@@ -10,7 +10,7 @@ export default function Navbar() {
   const API = "http://10.80.14.29:3001";
 
   return (
-    <nav className="fixed w-full h-20 z-50">
+    <nav className="fixed w-full h-20 z-500">
       <div className="relative z-20 bg-[var(--green-800)] h-full w-full shadow-lg">
         <div className="w-full mx-auto px-4 h-full flex items-center justify-between">
             <div className="flex items-center w-full lg:w-auto">

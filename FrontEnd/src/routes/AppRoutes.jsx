@@ -4,6 +4,7 @@ import ProtectedRoute from '@/modules/auth/components/ProtectedRoute';
 import AuthPage from '@/modules/auth/AuthPage';
 import AppLayout from '@/layouts/AppLayout';
 import MetodologiaPage from '../modules/metodologia/pages/MetodologiaPage';
+import DadosPage from '../modules/dados/pages/DadosPage';
 
 export default function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/metodologia" element={<MetodologiaPage />} />
+          <Route path="/cenario-atual" element={<DadosPage />} />
         </Route>
       </Route>
 
