@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 export default function NavLinks({ mobile, closeMenu }) {
   const links = [
     { name: 'metodologia', path: '/metodologia' },
-    { name: 'dados', path: '/dados' },
+    { name: 'Cenário Atual', path: '/cenario-atual' },
     { name: 'simulação', path: '/simulacao' },
   ];
 

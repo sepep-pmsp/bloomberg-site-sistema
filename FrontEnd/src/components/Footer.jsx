@@ -5,7 +5,7 @@ import bloomberg from '@/assets/images/bloomberg-footer-lockup.svg'
 export default function Footer() {
     return (
         <>
-            <footer className='w-screen pt-8 bg-[var(--color-primary)] h-screen max-md:w-107 2xl:h-142'>
+            <footer className='w-full pt-8 bg-[var(--color-primary)] h-screen max-md:w-107 2xl:h-142'>
                 <div className='flex flex-col gap-25 w-full py-20' style={{ maxWidth: "1800px", height: "auto", margin: "0 auto" }}>
                     <div className='text-[var(--accent-mint)] flex flex-col 2xl:flex-row justify-between items-center gap-8'>
                         <img src={logo} alt="" />
