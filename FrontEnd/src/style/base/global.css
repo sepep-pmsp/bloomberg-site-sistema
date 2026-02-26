@@ -28,6 +28,11 @@ h4, h5, h6 {
 }
 
 /* Texto padrão */
-p, span, li, label, a {
+p, span, li, label, a, select, option {
   font-family: var(--font-body);
+}
+
+#map {
+    height: 100vh; /* Ou 500px, etc. */
+    width: 100%;
 }
