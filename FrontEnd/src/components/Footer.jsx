@@ -1,6 +1,6 @@
 import React from 'react'
 import logo from '@/assets/images/LogoPrefeitura.svg'
-import bloomberg from '@/assets/images/bloomberg-footer-lockup.svg'
+import bloomberg from '@/assets/images/jhu-bloomberg-footer-lockup.svg'
 
 export default function Footer() {
     return (
@@ -14,20 +14,20 @@ export default function Footer() {
                             <div className='flex flex-col flex-nowrap 2xl:items-end gap-8'>
                                 <span className='!text-base flex flex-row items-center 2xl:justify-end gap-5'>
                                     <p>Viaduto do Chá, 15 - Centro Histórico <br /> de São Paulo - SP, 01007-040</p>
-                                    <i className="fa-solid fa-location-dot !text-xl"></i>
+                                    <i className="fa-solid fa-location-dot !text-xl text-white relative bottom-1"></i>
                                 </span>
                                 <span className='!text-base flex flex-row items-center 2xl:justify-end gap-5'>
                                     <p>(11) 3113-8000</p>
-                                    <i className="fa-solid fa-phone !text-xl"></i>
+                                    <i className="fa-solid fa-phone !text-xl text-white"></i>
                                 </span>
                             </div>
                         </div>
 
                     </div>
-                    <div className='text-[var(--accent-mint)] flex flex-col 2xl:flex-row justify-between items-center'>
+                    <div className='text-[var(--accent-mint)] flex flex-col 2xl:flex-row justify-between items-center gap-8 lg:gap-0'>
                         <span className=' flex flex-col gap-7 items-start'>
                             <h4 className='text-[var(--accent-mint)] !text-xl'>Em Parceria com:</h4>
-                            <img src={bloomberg} alt="" className='2xl:relative 2xl:right-4' />
+                            <img src={bloomberg} alt="" className='2xl:relative 2xl:right-0 max-md:w-90' />
                         </span>
                         <div className='flex items-end flex-col'>
                         <h4 className='!text-xl pb-8'>Nos siga em nossas redes</h4>
