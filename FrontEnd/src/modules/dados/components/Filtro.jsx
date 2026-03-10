@@ -9,7 +9,7 @@ const parseNumber = (val) => {
     return isNaN(num) ? 0 : num;
 };
 
-export default function Filtro() {
+export default function Filtro({ variant = "plus" }) {
     const [rawData, setRawData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [popBounds, setPopBounds] = useState({ min: 0, max: 2000000 });
@@ -100,6 +100,7 @@ export default function Filtro() {
             ) : (
                 <>
                     <FiltrosFrota
+                        variant={variant}
                         filters={filters}
                         setFilters={setFilters}
                         uniqueLines={uniqueLines}
@@ -108,7 +109,7 @@ export default function Filtro() {
                         popBounds={popBounds}
                     />
 
-                    <TabelaFrota data={filteredData} stats={stats}/>
+                    <TabelaFrota variant={variant} data={filteredData} stats={stats}/>
                 </>
             )}
         </div>

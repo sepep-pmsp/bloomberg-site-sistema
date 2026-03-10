@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import ModalTrajeto from '../../Dados/Mapa/ModalTrajeto';
 
-export default function TabelaFrota({ data, stats }) {
+export default function TabelaFrota({ data, stats, variant }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [selectedBus, setSelectedBus] = useState(null);
     const itemsPerPage = 7;
+    const isMinus = variant === "minus";
+    const tituloTabela = isMinus ? "Ônibus com emissões evitadas por linha/dia" : "Ônibus mais poluentes por linha/dia";
+    const labelPopTable = isMinus ? "População Resguardada" : "População Afetada";
+
     const sortedData = React.useMemo(() => {
         if (!sortConfig.key) return data;
         return [...data].sort((a, b) => {
@@ -15,6 +19,7 @@ export default function TabelaFrota({ data, stats }) {
             return 0;
         });
     }, [data, sortConfig]);
+    
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
     const currentData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) || [];
     const getPageNumbers = () => {
@@ -45,7 +50,6 @@ export default function TabelaFrota({ data, stats }) {
             ? <i className="fa fa-angle-up text-green-600 ml-2 relative "></i>
             : <i className="fa fa-angle-down text-green-600 ml-2 relative"></i>;
     };
-
     return (
         <div>
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
@@ -58,7 +62,7 @@ export default function TabelaFrota({ data, stats }) {
                             <path d="M4.55981 31.9199V28.8799L7.59982 25.8399V31.9199H4.55981ZM10.6398 31.9199V22.7999L13.6798 19.7599V31.9199H10.6398ZM16.7198 31.9199V19.7599L19.7599 22.8379V31.9199H16.7198ZM22.7999 31.9199V22.8379L25.8399 19.7979V31.9199H22.7999ZM28.8799 31.9199V16.7198L31.9199 13.6798V31.9199H28.8799ZM4.55981 24.0539V19.7599L15.1998 9.11983L21.2799 15.1998L31.9199 4.55981V8.85383L21.2799 19.4939L15.1998 13.4138L4.55981 24.0539Z" fill="currentColor" />
                         </g>
                     </svg>
-                    <h2 className="text-[var(--bg-page-secondary)] !text-3xl !font-normal">Ônibus mais poluentes por linha</h2>
+                    <h2 className="text-[var(--bg-page-secondary)] !text-3xl !font-normal">{tituloTabela}</h2>
                 </div>
                 <div className="flex flex-row w-full">
                     <div className={clsx("overflow-x-auto transition-all duration-300 flex w-full", selectedBus ? "border-r-2 border-gray-200" : "w-full")}>
@@ -70,7 +74,7 @@ export default function TabelaFrota({ data, stats }) {
                                         { label: 'Modelo', key: 'modelo' },
                                         { label: 'Linha', key: 'linha' },
                                         { label: 'Kms Rodados', key: 'km_rodados' },
-                                        { label: 'População Afetada', key: 'populacao_afetada' },
+                                        { label: labelPopTable, key: 'populacao_afetada' },
                                     ].map(col => (
                                         <th key={col.key} className="px-4 py-4 text-left cursor-pointer hover:bg-gray-50 transition-colors w-40 !font-normal" onClick={() => handleSort(col.key)}>
                                             <div className="flex items-center gap-1">{col.label} {renderSortIcon(col.key)}</div>
@@ -103,11 +107,11 @@ export default function TabelaFrota({ data, stats }) {
                                     const rowClass = clsx("border-b border-[#6C7F6F] transition-colors cursor-pointer", isActiveRow ? "bg-gray-100" : "hover:bg-gray-50");
                                     const badgeClass = clsx(
                                         "px-4 py-1.5 rounded-full text-xs font-bold text-white text-center inline-block min-w-[90px] border-2",
-                                        isRedPop ? "bg-[#8A1B1B] border-[#8A1B1B]" : "bg-[#2E7D32] border-[#2E7D32]"
+                                        isMinus ? "bg-[#B9B9B9] border-[#B9B9B9]" : (isRedPop ? "bg-[#8A1B1B] border-[#8A1B1B]" : "bg-[#2E7D32] border-[#2E7D32]")
                                     );
                                     const pollutionCellClass = clsx(
                                         "px-6 py-4 text-center text-gray-800 font-medium",
-                                        isRedEmissions ? "bg-[#FFEBEB]" : "bg-[#E8F5E9]"
+                                        isMinus ? "bg-[#dedede]" : (isRedEmissions ? "bg-[#FFEBEB]" : "bg-[#E8F5E9]")
                                     );
                                     const lineBadgeClass = "bg-[#0A290F] text-white px-3 py-1 rounded-full text-xs font-bold text-center inline-block min-w-[70px]";
                                     return (
