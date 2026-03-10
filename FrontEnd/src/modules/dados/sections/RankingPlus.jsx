@@ -1,7 +1,7 @@
 import React from 'react'
 import Filtro from '../components/Filtro'
 
-export default function Ranking() {
+export default function RankingPlus() {
     return (
         <>
             <section className="bg-[var(--bg-page-secondary)] flex flex-col py-8">
@@ -11,7 +11,7 @@ export default function Ranking() {
                 </div>
             </section>
             <section style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
-                <Filtro />
+                <Filtro variant="plus" />
             </section>
         </>
     )

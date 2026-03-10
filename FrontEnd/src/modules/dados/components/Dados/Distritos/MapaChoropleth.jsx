@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, GeoJSON, useMapEvents, TileLayer } from 'react-leaflet';
+import { MapContainer, GeoJSON, useMapEvents, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import CustomZoomControl from '../../../hooks/CustomZoomControl';
@@ -13,24 +13,38 @@ function MapZoomTracker({ onZoomChange }) {
     return null;
 }
 
+function MapResizeFixer() {
+    const map = useMap();
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [map]);
+
+    return null;
+}
+
 export default function MapaChoropleth({ filters }) {
     const [zoomLevel, setZoomLevel] = useState(10);
     const isTotalMode = zoomLevel <= 9;
     const isLabelsMode = zoomLevel >= 12;
-    const { 
-        geoData, loading, geoJsonLayerRef, 
-        mapStats, styleFeature, onEachFeature, layerKey 
+    const {
+        geoData, loading, geoJsonLayerRef,
+        mapStats, styleFeature, onEachFeature, layerKey
     } = useMapaChoropleth(filters, isTotalMode, isLabelsMode);
     const spBounds = [
-        [-24.3, -47.1], 
-        [-23.1, -46.1] 
+        [-24.3, -47.1],
+        [-23.1, -46.1]
     ];
 
     if (loading) return <div className="w-full h-full flex items-center justify-center font-bold text-[#0A290F]">Carregando Mapa Coroplético...</div>;
     if (!geoData) return <div className="w-full h-full flex items-center justify-center font-bold text-red-600">Falha ao cruzar dados do mapa.</div>;
 
     return (
-        <div className="w-full h-86 lg:h-full relative bg-[#F3FDF5]">
+        <div className="w-full min-h-[600px] h-[700px] relative bg-[#F3FDF5]">
             <style>{`.custom-tooltip-transparent { background: transparent; border: none; box-shadow: none; padding: 0; }
                 .custom-tooltip-labels { background: transparent; border: none; box-shadow: none; padding: 0; pointer-events: none; }
                 .leaflet-tooltip-left::before, .leaflet-tooltip-right::before, .leaflet-tooltip-top::before, .leaflet-tooltip-bottom::before { display: none; }`}</style>
@@ -53,25 +67,26 @@ export default function MapaChoropleth({ filters }) {
                 </div>
             </div>
 
-            <MapContainer 
-                center={[-23.5505, -46.6333]} 
-                zoom={10} 
+            <MapContainer
+                center={[-23.5505, -46.6333]}
+                zoom={10}
                 minZoom={9}
                 maxBounds={spBounds}
                 maxBoundsViscosity={1.0}
-                style={{ height: '100%', width: '100%', zIndex: 10, background: '#e5e5e5' }} 
-                zoomControl={false} 
+                style={{ height: '100%', width: '100%', zIndex: 10, background: '#e5e5e5' }}
+                zoomControl={false}
                 attributionControl={false}
             >
+                <MapResizeFixer />
                 <MapZoomTracker onZoomChange={setZoomLevel} />
                 <CustomZoomControl hasBackground />
                 <TileLayer url="https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-                <GeoJSON 
-                    key={layerKey} 
-                    ref={geoJsonLayerRef} 
-                    data={geoData} 
-                    style={styleFeature} 
-                    onEachFeature={onEachFeature} 
+                <GeoJSON
+                    key={layerKey}
+                    ref={geoJsonLayerRef}
+                    data={geoData}
+                    style={styleFeature}
+                    onEachFeature={onEachFeature}
                 />
             </MapContainer>
         </div>
