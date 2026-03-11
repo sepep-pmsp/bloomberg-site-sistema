@@ -5,6 +5,7 @@ import AuthPage from '@/modules/auth/AuthPage';
 import AppLayout from '@/layouts/AppLayout';
 import MetodologiaPage from '../modules/metodologia/pages/MetodologiaPage';
 import DadosPage from '../modules/dados/pages/DadosPage';
+import SimulaçoesPage from '../modules/simulacoes/pages/SimulaçoesPage';
 
 export default function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function AppRoutes() {
         <Route element={<AppLayout />}>
           <Route path="/metodologia" element={<MetodologiaPage />} />
           <Route path="/cenario-atual" element={<DadosPage />} />
+          <Route path="/simulacao" element={<SimulaçoesPage />} />
         </Route>
       </Route>
 
