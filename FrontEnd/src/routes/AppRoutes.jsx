@@ -6,6 +6,7 @@ import AppLayout from '@/layouts/AppLayout';
 import MetodologiaPage from '../modules/metodologia/pages/MetodologiaPage';
 import DadosPage from '../modules/dados/pages/DadosPage';
 import SimulaçoesPage from '../modules/simulacoes/pages/SimulaçoesPage';
+import ArtigoCompleto from '../modules/metodologia/sections/ArtigoCompleto';
 
 export default function AppRoutes() {
   return (
@@ -18,9 +19,10 @@ export default function AppRoutes() {
       {/* Protegido */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route path="/metodologia" element={<MetodologiaPage />} />
+          <Route path="/sobre-o-projeto" element={<MetodologiaPage />} />
           <Route path="/cenario-atual" element={<DadosPage />} />
           <Route path="/simulacao" element={<SimulaçoesPage />} />
+          <Route path='/artigo-completo' element={<ArtigoCompleto/>} />
         </Route>
       </Route>
 

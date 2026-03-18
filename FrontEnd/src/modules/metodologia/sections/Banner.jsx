@@ -1,6 +1,7 @@
 import React from 'react'
 import bannerImg from '@/assets/images/banner.svg';
 import BusProgressBar from '../components/BusProgressBar';
+import Beneficios from './Beneficios';
 
 export default function Banner({ content }) {
     if (!content) return null;
@@ -19,6 +20,9 @@ export default function Banner({ content }) {
                     </div>
                 </div>
             </section>
+            <>
+                <Beneficios />
+            </>
             <section className='bg-[var(--bg-page-secondary)] py-8 '>
                 <div className='flex flex-col gap-15'style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
                     <h1 className='lg:!text-5xl !text-base lg:w-4xl'>{progressBar.title}</h1>

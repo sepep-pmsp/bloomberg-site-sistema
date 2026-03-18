@@ -5,7 +5,7 @@ function useLockHorizontalScrollMd() {
     const mediaQuery = window.matchMedia("(min-width: 768px)");
 
     const lock = () => {
-      document.documentElement.style.overflowX = "hidden";
+      document.documentElement.style.overflowX = "none";
       document.body.style.overflowX = "hidden";
     };
 
