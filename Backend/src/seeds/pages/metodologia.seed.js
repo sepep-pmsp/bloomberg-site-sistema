@@ -16,7 +16,7 @@ const seedMetodologia = async () => {
         section: 'banner_progress',
         content: {
           banner: {
-            title: "Monitoramento da Eletrificação da <br/> Frota de Ônibus de <br/> São Paulo",
+            title: "Monitoramento da Eletrificação da Frota de Ônibus de São Paulo",
             subtitle: "Com o objetivo de medir as emissões de poluentes no transporte coletivo da capital, o Projeto acompanha os ônibus municipais em seus trajetos diários, produz um ranking e oferece indicadores para a gestão na substituição por veículos mais limpos, beneficiando a todos os moradores da nossa cidade.",
             backgroundImage: "/images/banner.svg"
           },
