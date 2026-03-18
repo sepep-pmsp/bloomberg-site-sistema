@@ -8,7 +8,7 @@ export default function Cenarios({ content }) {
     const { title, subtitle, cards } = content;
 
     return (
-        <div className='w-screen h-full 2xl:h-[170vh]'>
+        <div className='w-screen h-full 2xl:h-[170vh] my-20'>
             <div className='flex flex-col justify-center items-center' style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
                 <div className='pt-28 flex flex-col gap-10 mb-16'>
                     <h2 className='text-3xl 2xl:!text-[64px] text-center capitalize w-full' dangerouslySetInnerHTML={{ __html: title }}/>

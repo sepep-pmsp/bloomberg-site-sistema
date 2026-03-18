@@ -1,0 +1,41 @@
+import React from 'react'
+import bannerImg from '@/assets/images/BannerArtigoCompleto.svg';
+
+export default function ArtigoCompleto() {
+    // Transformei a lista de 1 item em um Objeto direto para facilitar o uso
+    const artigo = {
+        title: 'Visualize as principais métricas e dados relacionados à eletrificação da frota de ônibus em São Paulo',
+        autor: 'Por Olívia Silva Amann',
+        atualizacao: '01/03/2026 - Atualizado em 02/03/2026 09:32',
+        texto: [
+            'A metodologia adotada neste projeto foi desenvolvida para estimar os impactos da política de eletrificação da frota de ônibus do município de São Paulo, estruturando-se em duas etapas complementares: diagnóstico e prognóstico.',
+            'Na etapa de diagnóstico, o projeto faz uso da API do Olho Vivo, disponibilizada pela SPTrans, que fornece em regime de quase tempo real (near real time) a posição geográfica (latitude e longitude) de todos os ônibus em operação no município de São Paulo. Foi construído um sistema automatizado que realiza a coleta dessas informações a cada minuto, possibilitando a reconstrução dos trajetos individuais de cada veículo ao longo do dia. A partir da sequência temporal de posições sucessivas, são calculadas as distâncias percorridas em cada intervalo e, posteriormente, consolidada a quilometragem diária percorrida por veículo, com sua devida associação espacial aos distritos administrativos da cidade por meio de procedimentos de interseção geográfica.',
+            'Com base nas taxas médias de consumo de combustível por quilômetro, diferenciadas por modelo de ônibus e características operacionais da frota a diesel, fornecidas pela Secretaria de Mobilidade e Transporte e pela SPTrans, estima-se o consumo de diesel correspondente a cada veículo em cada distrito. Esse consumo é então convertido em emissões dos poluentes dióxido de carbono (CO₂), óxidos de nitrogênio (NOₓ) e material particulado (MP), utilizando fatores de emissão oficiais estabelecidos pela Instrução Técnica nº 11 da SPTrans (2023). As emissões estimadas são agregadas espacialmente por distrito, permitindo a construção de um diagnóstico territorializado do impacto ambiental da frota a diesel no município. O impacto ambiental da frota elétrica é mensurado por meio de um exercício contrafactual. Para isso, aplica-se a média das emissões por quilômetro observadas na frota a diesel, calculadas separadamente para cada distrito, sobre a quilometragem efetivamente percorrida pelos ônibus elétricos nesses mesmos territórios. Dessa forma, obtém-se uma estimativa das emissões que teriam sido geradas caso os veículos elétricos fossem movidos a diesel.',
+            'Além disso, estima-se o efeito da emissão dos poluentes na saúde dos residentes da cidade. Os poluentes analisados apresentam comportamentos de emissão distintos. O CO₂ possui impacto global e baixa relevância territorial direta. Já o NOₓ e o MP produzem efeitos locais e imediatos sobre a qualidade do ar e a saúde da população. Portanto, a mensuração do impacto na saúde se dá pela população potencialmente afetada pela emissão de NOₓ e MP dos trajetos dos ônibus em circulação.',
+            'Para isso, utiliza-se os setores censitários do IBGE (2022). A partir dos trajetos dos ônibus, ao redor deles aplica-se um buffer espacial de [incluir] metros para o NOₓ e [incluir] metros para o MP, de modo a representar a área potencialmente afetada pela emissão da circulação dos ônibus. Os buffers dos trajetos são então sobrepostos aos setores censitários do município, por meio de uma operação de interseção espacial. Essa etapa permite identificar as porções dos setores que se encontram dentro da área de influência dos ônibus. Para evitar geometrias de interseções muito pequenas, áreas residuais sem relevância espacial são descartadas.',
+            'A população afetada é estimada de forma proporcional à área de interseção entre cada setor censitário e o buffer dos trajetos. Assume-se uma distribuição homogênea da população dentro de cada setor, de modo que a parcela da população exposta corresponde à razão entre a área interceptada pelo buffer e a área total do setor. A partir desse procedimento, obtém-se uma estimativa do número de habitantes potencialmente afetados pelas emissões de poluentes da circulação dos ônibus em cada trecho. Dessa forma, não levamos em consideração a quantidade de pessoas que transitam na região diariamente, como pedestres, pessoas em situação de rua, ou trabalhadores da região; apenas consideramos os moradores. Por fim, os resultados são agregados em diferentes níveis de análise, permitindo a obtenção da população afetada por veículo, por linha de ônibus e por distrito administrativo.',
+            'A etapa de prognóstico utiliza uma Simulação de Monte Carlo como instrumento para apoiar o planejamento e a tomada de decisões futuras relacionadas à eletrificação da frota. A técnica baseia-se na realização de 2.000 simulações independentes, nas quais são selecionados, de forma aleatória, diferentes conjuntos de ônibus a diesel que poderiam ser substituídos por veículos elétricos. Para cada simulação, estima-se o volume diário de emissões evitadas de CO₂, NOₓ e MP, refletindo a heterogeneidade da frota atualmente em operação. A partir dessas simulações, é possível obter não apenas um valor médio esperado de emissões evitadas, mas também a distribuição completa dos resultados, o que permite avaliar a variabilidade associada às diferentes combinações de veículos substituídos.',
+            'Os impactos estimados podem ser projetados ao longo de um horizonte temporal específico, possibilitando a análise do efeito acumulado das reduções de emissões ao longo do tempo. Além do cenário médio, o modelo identifica um cenário de impacto máximo, no qual a substituição prioriza os ônibus a diesel com maiores níveis de emissão. Esse cenário representa um limite superior teórico de ganhos ambientais e serve como referência para avaliar o potencial de estratégias mais direcionadas de substituição da frota. Adicionalmente, a simulação permite estimar o número de ônibus elétricos necessários para atingir metas específicas de emissões evitadas.',
+            'Nesse caso, são testadas quantidades crescentes de veículos elétricos até que, em pelo menos 75% dos cenários simulados, as metas definidas para cada poluente sejam alcançadas. Essa abordagem fornece uma visão mais robusta do esforço necessário, incorporando incertezas e evitando decisões baseadas apenas em valores médios. A comparação entre o impacto médio esperado, a variabilidade dos resultados e o cenário de impacto máximo oferece subsídios objetivos para o planejamento público, permitindo avaliar tanto os resultados prováveis da eletrificação da frota quanto os ganhos adicionais associados a estratégias de substituição mais eficientes.',
+            'Em conjunto, essa estratégia metodológica permite quantificar de forma integrada os impactos ambientais, territoriais e populacionais da eletrificação da frota, oferecendo subsídios concretos para o planejamento e a tomada de decisão em políticas públicas.'
+        ]
+    };
+    return (
+        <>
+            <section style={{ backgroundImage: `url(${bannerImg})` }} className="relative min-h-[65vh] w-full bg-cover bg-center max-md:w-[26.55rem]">
+                <div className="absolute inset-0 w-full h-full flex items-end pb-20 bg-black/55 backdrop-blur-[1px] max-md:w-[26.55rem]">
+                    <div className="px-11 text-white" style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
+                        <h1 className="mb-6 text-2xl 2xl:!text-[82px] font-bold leading-tight ">Como construímos as metodologias do projeto?</h1>
+                    </div>
+                </div>
+            </section>
+            <section className="py-20 !flex flex-col gap-8 " style={{ maxWidth: "1420px", height: "auto", margin: "0 auto" }}>
+                <h2 className='!text-4xl !font-normal'>{artigo.title}</h2>
+                <h4 className='!text-xl'>{artigo.autor} <br/> {artigo.atualizacao}</h4>
+                {artigo.texto.map((paragrafo, index) => (
+                    <h6 className='!text-2xl !font-normal' key={index}>{paragrafo}</h6>
+                ))}
+            </section>
+        </>
+    )
+}

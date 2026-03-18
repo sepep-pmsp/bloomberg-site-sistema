@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 
 export default function NavLinks({ mobile, closeMenu }) {
   const links = [
-    { name: 'metodologia', path: '/metodologia' },
+    { name: 'Sobre o Projeto', path: '/sobre-o-projeto' },
     { name: 'Cenário Atual', path: '/cenario-atual' },
-    { name: 'simulação', path: '/simulacao' },
+    { name: 'Simulações', path: '/simulacao' },
   ];
 
   return (
@@ -16,7 +16,7 @@ export default function NavLinks({ mobile, closeMenu }) {
             to={link.path}
             onClick={mobile ? closeMenu : undefined}
             className={({ isActive }) => 
-              `capitalize font-bold tracking-wide nav-hover-effect !text-2xl
+              `font-bold tracking-wide nav-hover-effect !text-2xl
                ${mobile ? '!text-base py-2 block w-full' : '!text-2xl'}
                ${isActive ? 'active-link' : ''}`}>
             {link.name}

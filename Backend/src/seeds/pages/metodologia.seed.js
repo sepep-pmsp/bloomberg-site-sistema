@@ -16,8 +16,8 @@ const seedMetodologia = async () => {
         section: 'banner_progress',
         content: {
           banner: {
-            title: "ELETRIFICAÇÃO<br/> DA FROTA",
-            subtitle: "Tudo o que você precisa saber sobre a eletrificação da frota de ônibus de São Paulo",
+            title: "Monitoramento da Eletrificação da <br/> Frota de Ônibus de <br/> São Paulo",
+            subtitle: "Com o objetivo de medir as emissões de poluentes no transporte coletivo da capital, o Projeto acompanha os ônibus municipais em seus trajetos diários, produz um ranking e oferece indicadores para a gestão na substituição por veículos mais limpos, beneficiando a todos os moradores da nossa cidade.",
             backgroundImage: "/images/banner.svg"
           },
           progressBar: {
@@ -25,7 +25,7 @@ const seedMetodologia = async () => {
             description: "Substituir 2.600 ônibus movidos a diesel por veículos de matriz energética mais limpa, reforçando o compromisso da cidade com a preservação ambiental.",
             currentValue: [{
               label: "veículos já substituídos!",
-              value: 1530
+              value: 1259
             }],
             maxValue: [{
                 label: "veículos eletrificados<br/>até 2028",
@@ -58,17 +58,17 @@ const seedMetodologia = async () => {
             { 
                 id: 0, 
                 icon: "bus",
-                description: "A etapa de prognóstico baseia-se em uma Simulação de Monte Carlo, com o objetivo de apoiar a tomada de decisões futuras. A partir de 2.000 repetições, são estimados os efeitos de emissões evitadas associados à incorporação de diferentes quantidades de novos ônibus elétricos, bem como o número de veículos elétricos necessários para atingir metas específicas de emissões evitadas. " 
+                description: "A etapa de prognóstico baseia-se em uma Simulação de Monte Carlo, com o objetivo de apoiar a tomada de decisões futuras. A partir de 2.000 repetições, são estimados os efeitos de emissões evitadas associados à incorporação de diferentes quantidades de novos ônibus elétricos, bem como o número de veículos elétricos necessários para atingir metas específicas de emissões evitadas." 
             },
             { 
                 id: 1, 
                 icon: "globe", 
-                description: "Adicionalmente, identifica-se um cenário de impacto máximo e o mais provável, no qual os ônibus a diesel mais poluentes são priorizados na substituição por veículos elétricos. A comparação entre esses cenários fornece subsídios objetivos para o planejamento público, indicando tanto o resultado esperado quanto os ganhos potenciais de estratégias mais direcionadas.​" 
+                description: "Os resultados incorporam ainda uma projeção temporal em dias, permitindo avaliar os impactos ao longo do tempo. A distribuição dos resultados possibilita estimar o impacto médio esperado da substituição, assim como a variabilidade decorrente da heterogeneidade da frota.​" 
             },
             { 
                 id: 2, 
                 icon: "cloud", 
-                description: "Os resultados incorporam ainda uma projeção temporal em dias, permitindo avaliar os impactos ao longo do tempo. A distribuição dos resultados possibilita estimar o impacto médio esperado da substituição, assim como a variabilidade decorrente da heterogeneidade da frota." 
+                description: "Adicionalmente, identifica-se um cenário de impacto máximo e o mais provável, no qual os ônibus a diesel mais poluentes são priorizados na substituição por veículos elétricos. A comparação entre esses cenários fornece subsídios objetivos para o planejamento público, indicando tanto o resultado esperado quanto os ganhos potenciais de estratégias mais direcionadas.​" 
             }
           ]
         }
@@ -86,8 +86,8 @@ const seedMetodologia = async () => {
         page,
         section: 'impactos',
         content: {
-          title: "COMO ESTIMAMOS O<br /> IMPACTO NA SAÚDE?",
-          subtitle: "Entenda como funciona a estimativa de impacto da eletrificação da <br /> frota de ônibus na saúde da população",
+          title: "COMO ESTIMAMOS O<br /> IMPACTO NA POPULAÇÃO?",
+          subtitle: "Entenda como funciona a estimativa de impacto da eletrificação da <br /> frota de ônibus na população",
           modalTitle: "Metodologia Detalhada: Impactos na Saúde",
           modalFooter: "Fonte: SPTrans e IBGE (2022)",
           doc: `Além disso, estima-se o efeito da emissão dos poluentes na saúde dos residentes da cidade. Os poluentes analisados apresentam comportamentos de emissão distintos. O CO₂ possui impacto global e baixa relevância territorial direta. Já o NOₓ e o MP produzem efeitos locais e imediatos sobre a qualidade do ar e a saúde da população. Portanto, a mensuração do impacto na saúde se dá pela população potencialmente afetada pela emissão de NOₓ e MP dos trajetos dos ônibus em circulação.
@@ -99,7 +99,7 @@ const seedMetodologia = async () => {
             { 
                 id: 0, 
                 number: "1", 
-                description: "Para estimar o impacto dos poluentes na saúde da população residente, consideramos apenas o MP e o NOx. Assim, o impacto na saúde é mensurado a partir da população potencialmente afetada pelas emissões desses poluentes de comportamento local ao longo dos trajetos dos ônibus.​" 
+                description: "Para estimar o impacto dos poluentes na população residente, consideramos apenas o MP e o NOx. Assim, o impacto é mensurado a partir da população potencialmente afetada pelas emissões desses poluentes de comportamento local ao longo dos trajetos dos ônibus.​" 
             },
             { 
                 id: 1, 
@@ -153,7 +153,11 @@ const seedMetodologia = async () => {
 
                 $$Litros ou Kg de diesel = Fator de consumo de diesel (em L ou KG)*km rodados​$$
 
-                O fator de emissão pode variar dependendo do modelo do ônibus e se tem ou não ar condicionado​.`
+                O fator de emissão pode variar dependendo do modelo do ônibus e se tem ou não ar condicionado​.
+
+                Dados da Instrução Técnica nº 11 da SPTrans (2023)​
+                
+                `
              
             },
             { 
@@ -165,7 +169,11 @@ const seedMetodologia = async () => {
 
                 $$Kg MP ou NOx emitido = Fator de emissão do MP ou NOx × Kg de diesel consumido$$
 
-                O fator de emissão do CO₂ é constante: 2,671Kg/l; mas o do MP e no NOx variam de acordo com a fase CONAMA do motor do ônibus.`
+                O fator de emissão do CO₂ é constante: 2,671Kg/l; mas o do MP e no NOx variam de acordo com a fase CONAMA do motor do ônibus.
+                
+                Dados da Instrução Técnica nº 11 da SPTrans (2023)​
+                
+                `
             },
             { 
                 id: 3, 

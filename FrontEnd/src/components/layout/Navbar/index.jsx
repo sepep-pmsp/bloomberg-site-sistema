@@ -17,9 +17,9 @@ export default function Navbar() {
 
     return (
         <nav className="flex flex-col">
-            <section className="fixed top-0 left-0 w-full h-20 z-[500]">
+            <section className="fixed top-0 left-0 w-full h-auto z-[500]">
                 <div className="relative z-20 bg-[var(--green-800)] h-full w-full shadow-lg">
-                    <div className="w-full mx-auto px-4 h-full flex items-center justify-between">
+                    <div className="w-full mx-auto px-10 py-8 h-full flex items-center justify-between">
                         <div className="flex items-center w-full lg:w-auto">
                             <HamburgerBtn isOpen={isOpen} toggle={() => setIsOpen(!isOpen)} />
                             <BrandLogo />
@@ -27,37 +27,20 @@ export default function Navbar() {
                         <div className="hidden lg:flex items-center gap-8">
                             <NavLinks />
                             {user && (
-                                /* 3. Envolvemos o avatar em uma div relativa para ancorar o dropdown */
                                 <div className="relative">
-                                    <button 
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className="flex items-center focus:outline-none transition-transform hover:scale-105"
-                                        title="Menu do Usuário"
-                                    >
-                                        <img
-                                            src={user.avatar ? `${API}${user.avatar}` : `https://ui-avatars.com/api/?name=${user.nome}`}
-                                            alt="Perfil"
-                                            className="w-10 h-10 rounded-full border-2 border-white object-cover cursor-pointer shadow-sm"
-                                        />
+                                    <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center focus:outline-none transition-transform hover:scale-105" title="Menu do Usuário">
+                                        <img src={user.avatar ? `${API}${user.avatar}` : `https://ui-avatars.com/api/?name=${user.nome}`} alt="Perfil" className="w-10 h-10 rounded-full border-2 border-white object-cover cursor-pointer shadow-sm"/>
                                     </button>
-
-                                    {/* 4. O Dropdown flutuante */}
                                     {isDropdownOpen && (
                                         <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 animate-fade-in">
-                                            {/* Header do mini menu com o nome do usuário */}
                                             <div className="px-4 py-2 border-b border-gray-100 mb-1">
                                                 <p className="text-xs text-gray-500">Logado como</p>
                                                 <p className="text-sm font-bold text-[#0A290F] truncate">{user.nome}</p>
                                             </div>
-                                            
-                                            {/* Botão de Sair */}
-                                            <button
-                                                onClick={() => {
+                                            <button onClick={() => {
                                                     setIsDropdownOpen(false);
-                                                    if (logout) logout(); // Chama sua função de deslogar
-                                                }}
-                                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2 font-medium"
-                                            >
+                                                    if (logout) logout();
+                                                }}  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2 font-medium">
                                                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
                                                 Sair da conta
                                             </button>
@@ -76,10 +59,10 @@ export default function Navbar() {
                     </div>
                 </div>
             </section>
-            <section className="w-full mt-20 py-10 lg:h-[4.3rem] bg-[var(--green-450)] !flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-18">
-                <img src={bloomberg} alt="Logo da Bloomberg Philanthropies" />
-                <img src={prefeitura} alt="Logo da Prefeitura de São Paulo - Governo" />
-                <img src={Johns} alt="Logo da Johns Hopkins - University" />
+            <section className="w-full mt-32 py-12 lg:h-[4.3rem] bg-[var(--green-450)] !flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-40">
+                <img className='w-50' src={bloomberg} alt="Logo da Bloomberg Philanthropies" />
+                <img className='w-60' src={Johns} alt="Logo da Johns Hopkins - University" />
+                <img className='w-50' src={prefeitura} alt="Logo da Prefeitura de São Paulo - Governo" />
             </section>
             <section className='absolute left-0 w-full h-20 !flex justify-center lg:justify-end items-start flex-row flex-nowrap pt-4 lg:-left-8 z-50'>
                 <img src={SPMaisVerde} alt="" />

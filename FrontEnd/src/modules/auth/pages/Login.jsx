@@ -13,7 +13,7 @@ export default function Login({ onRegister, onForgot }) {
         e.preventDefault();
         try {
             await login(email, password);
-            navigate('/metodologia', { replace: true });
+            navigate('/sobre-o-projeto', { replace: true });
         } catch {
             alert('Erro ao logar');
         }

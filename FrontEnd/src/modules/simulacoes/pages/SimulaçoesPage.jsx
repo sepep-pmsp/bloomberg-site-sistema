@@ -8,7 +8,9 @@ export default function SimulaçoesPage() {
     <>
       <Banner />
       <Simulacoes/>
-      <Cenario/>
+      <div id='onibusSugerido'>
+        <Cenario/>
+      </div>
     </>
   )
 }

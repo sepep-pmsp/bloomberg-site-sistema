@@ -8,9 +8,15 @@ export default function DadosPage() {
   return (
     <>
         <Banner />
-        <RankingPlus />
-        <RankingMinus />
-        <Analise />
+        <div id="secao-territorializacao">
+            <Analise />
+        </div>
+        <div id="secao-diesel">
+            <RankingPlus />
+        </div>
+        <div id="secao-eletricos">
+            <RankingMinus />
+        </div>
     </>
   )
 }
