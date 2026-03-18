@@ -10,10 +10,10 @@ export default function Banner({ content }) {
 
     return (
         <>
-            <section style={{ backgroundImage: `url(${bannerImg})` }} className="relative min-h-[65vh] w-full bg-cover bg-center max-md:w-[26.55rem]">
+            <section style={{ backgroundImage: `url(${bannerImg})` }} className="relative min-h-[85vh] w-full bg-cover bg-center max-md:w-[26.55rem]">
                 <div className="absolute inset-0 w-full h-full flex items-end pb-20 bg-black/55 backdrop-blur-[1px] max-md:w-[26.55rem]">
-                    <div className="max-w-180 px-11 text-white">
-                        <h1 className="mb-6 text-2xl 2xl:!text-[82px] font-bold leading-tight max-w-130" dangerouslySetInnerHTML={{ __html: banner.title }} />
+                    <div className="px-11 text-white">
+                        <h1 className="mb-6 text-2xl 2xl:!text-[82px] font-bold leading-tight max-w-290" dangerouslySetInnerHTML={{ __html: banner.title }} />
                         <p className="max-w-130 2xl:!text-xl">
                             {banner.subtitle}
                         </p>
