@@ -108,17 +108,8 @@ export default function Simulacoes() {
                 <h4><strong className='!font-extrabold'>*Cenário mais provável:</strong> Leva em consideração as substituições mais prováveis com base na idade dos ônibus em questão.</h4>
                 <h4><strong className='!font-extrabold'>**Cenário máximo evitado:</strong> Leva em consideração as substituições que seriam mais benéficas em termos de redução de emissões.</h4>
             </div>
-            <div className="w-full mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="flex flex-col gap-10">
-                    <GaussianChart  title="Projeção de emissões evitadas acumuladas:"  poluenteLabel="CO₂ (t/dia)" meanProvavel={dados.co2.provavel} meanMax={dados.co2.max} theme="light"/>
-                    <GaussianChart title="Projeção de emissões evitadas acumuladas:" poluenteLabel="NOx (t/dia)" meanProvavel={dados.nox.provavel} meanMax={dados.nox.max} theme="light"/>
-                    <GaussianChart title="Projeção de emissões evitadas acumuladas:" poluenteLabel="MP (t/dia)" meanProvavel={dados.mp.provavel} meanMax={dados.mp.max} theme="light"/>
-                </div>
-                <div className="flex flex-col gap-10">
-                    <GaussianChart title="Distribuição de emissões evitadas:" poluenteLabel="CO₂ (t/dia)" meanProvavel={dados.co2.provavel} meanMax={dados.co2.max} theme="dark"/>
-                    <GaussianChart title="Distribuição de emissões evitadas:" poluenteLabel="NOx (t/dia)" meanProvavel={dados.nox.provavel} meanMax={dados.nox.max} theme="dark"/>
-                    <GaussianChart title="Distribuição de emissões evitadas:" poluenteLabel="MP (t/dia)" meanProvavel={dados.mp.provavel} meanMax={dados.mp.max} theme="dark"/>
-                </div>
+            <div className="w-full mt-12 mb-10" id='projeções'>
+                <GaussianChart dados={dados} />
             </div>
         </div>
     );

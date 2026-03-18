@@ -45,9 +45,9 @@ export default function Beneficios() {
                         </div>
                         <div className="text-white text-6xl md:text-8xl font-black shrink-0 rotate-90 xl:rotate-0 relative lg:-left-5">=</div>
                         <div className="flex flex-col md:flex-row items-center justify-center gap-6 xl:gap-10">
-                            <CirculoAnimado id="diesel" texto="-47,6 milhões de litros de óleo diesel/ano" icone={<img src={Gas} alt="" />} />
-                            <CirculoAnimado  id="co2" texto="-109,5 mil toneladas de CO2/ano" icone={<img src={Cloud} alt="" />} />
-                            <CirculoAnimado id="arvores" texto="6,4 mil árvores/ano" icone={<img src={Forest} alt="" />} />
+                            <CirculoAnimado id="diesel" texto="-35 mil litros de óleo diesel/ano" icone={<img src={Gas} alt="" />} />
+                            <CirculoAnimado  id="co2" texto="-87 toneladas de CO²/ano" icone={<img src={Cloud} alt="" />} />
+                            <CirculoAnimado id="arvores" texto="+6,4 mil árvores" icone={<img src={Forest} alt="" />} />
                         </div>
                     </section>
                 </div>

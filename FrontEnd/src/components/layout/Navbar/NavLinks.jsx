@@ -5,7 +5,7 @@ export default function NavLinks({ mobile, closeMenu }) {
   const links = [
     { name: 'Sobre o Projeto', path: '/sobre-o-projeto' },
     { name: 'Cenário Atual', path: '/cenario-atual' },
-    { name: 'Simulações', path: '/simulações' },
+    { name: 'Simulações', path: '/simulacao' },
   ];
 
   return (
