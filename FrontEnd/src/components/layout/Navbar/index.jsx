@@ -61,8 +61,8 @@ export default function Navbar() {
             </section>
             <section className="w-full mt-32 py-12 lg:h-[4.3rem] bg-[var(--green-450)] !flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-40">
                 <img className='w-50' src={bloomberg} alt="Logo da Bloomberg Philanthropies" />
-                <img className='w-60' src={Johns} alt="Logo da Johns Hopkins - University" />
                 <img className='w-50' src={prefeitura} alt="Logo da Prefeitura de São Paulo - Governo" />
+                <img className='w-60' src={Johns} alt="Logo da Johns Hopkins - University" />
             </section>
             <section className='absolute left-0 w-full h-20 !flex justify-center lg:justify-end items-start flex-row flex-nowrap pt-4 lg:-left-8 z-50'>
                 <img src={SPMaisVerde} alt="" />
