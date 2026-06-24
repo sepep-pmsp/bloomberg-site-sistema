@@ -181,13 +181,10 @@ while days <= 0 or days > 365:
     days = int(input("Digite o número de dias para a projeção: "))
 
 
-#path_df_consume_tabele = "path_to_your_csv_file.csv"  # Substitua pelo caminho real do seu arquivo CSV
-#output_dir = '/app/src/modules/api/content' # Substitua pelo caminho real do diretório onde deseja salvar os resultados
+path_df_consume_tabele = "path_to_your_csv_file.csv"  # Substitua pelo caminho real do seu arquivo CSV
+output_dir = '/app/src/modules/api/content' # Substitua pelo caminho real do diretório onde deseja salvar os resultados
 
-path_df_consume_tabele_test = r"C:\Users\x432601\Downloads\SIMULACAO_MONTE_CARLO\data_testes\data\calculo-emissao-poluentes-diario_2026-01-01_silver_corrigido.csv"
-output_dir = r"C:\Users\x432601\Downloads\SIMULACAO_MONTE_CARLO\data_testes\output"
-
-df_consume_table = pd.read_csv(path_df_consume_tabele_test, sep = ",")
+df_consume_table = pd.read_csv(path_df_consume_tabele, sep = ",")
 df_consume_table['distancia_percorrida'] = df_consume_table['distancia_percorrida']/1000 # Convertendo de metros para quilômetros, ajuste conforme a unidade original da coluna
 df_consume_table = df_consume_table[df_consume_table['distancia_percorrida'] >= 15] # Filtrando para considerar apenas os ônibus que percorreram mais de 15 km, ajuste conforme a necessidade do seu cenário
 df_consume_table = remove_outliers_mad(df_consume_table, 'emissao_co2(t)')
