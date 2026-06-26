@@ -1,0 +1,231 @@
+<% layout('admin/layout') -%>
+
+<div class="space-y-6">
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex items-center gap-4 mb-4">
+            <div class="bg-[#1b5c40] p-3 rounded-lg text-white">
+                <i class="fas fa-calculator text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Simulação Monte Carlo</h1>
+                <p class="text-gray-500 pt-2">
+                    Execute e valide a simulação dinâmica de emissões por quantidade de ônibus e dias.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500 font-bold uppercase">Python</p>
+            <% if (simulationStatus.pythonConfigurado) { %>
+                <p class="text-green-600 font-bold mt-2">Configurado</p>
+            <% } else { %>
+                <p class="text-red-600 font-bold mt-2">Não configurado</p>
+            <% } %>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500 font-bold uppercase">Script Monte Carlo</p>
+            <% if (simulationStatus.scriptEncontrado) { %>
+                <p class="text-green-600 font-bold mt-2">Encontrado</p>
+            <% } else { %>
+                <p class="text-red-600 font-bold mt-2">Não encontrado</p>
+            <% } %>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500 font-bold uppercase">CSV base</p>
+            <% if (simulationStatus.csvEncontrado) { %>
+                <p class="text-green-600 font-bold mt-2">Encontrado</p>
+            <% } else { %>
+                <p class="text-red-600 font-bold mt-2">Não encontrado</p>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Executar teste de simulação.</h2>
+
+        <form id="formSimulacao" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Quantidade de ônibus</label>
+                <input id="onibus" type="number" min="1" max="1000" value="80" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#1b5c40]">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Quantidade de dias</label>
+                <input id="dias" type="number" min="1" max="365" value="360" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#1b5c40]">
+            </div>
+
+            <button id="btnSimular" type="submit" class="bg-[#1b5c40] hover:bg-[#0f3d17] text-white px-6 py-2 rounded-lg font-bold transition-all shadow-md active:scale-95">
+                <i class="fas fa-play text-xs mr-2"></i>
+                Executar Simulação
+            </button>
+        </form>
+    </div>
+
+    <div id="statusBox" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Status da execução</h2>
+        <p id="statusText" class="text-gray-600">Aguardando...</p>
+    </div>
+
+    <div id="resultadoBox" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Resultado da simulação</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="border border-gray-100 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-2">CO₂</h3>
+                <p>Média: <strong id="co2Media">-</strong></p>
+                <p>Provável: <strong id="co2Provavel">-</strong></p>
+                <p>Máximo: <strong id="co2Max">-</strong></p>
+            </div>
+
+            <div class="border border-gray-100 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-2">NOx</h3>
+                <p>Média: <strong id="noxMedia">-</strong></p>
+                <p>Provável: <strong id="noxProvavel">-</strong></p>
+                <p>Máximo: <strong id="noxMax">-</strong></p>
+            </div>
+
+            <div class="border border-gray-100 rounded-lg p-4">
+                <h3 class="font-bold text-gray-700 mb-2">MP</h3>
+                <p>Média: <strong id="mpMedia">-</strong></p>
+                <p>Provável: <strong id="mpProvavel">-</strong></p>
+                <p>Máximo: <strong id="mpMax">-</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="erroBox" class="hidden bg-red-50 p-6 rounded-xl border border-red-200">
+        <h2 class="text-xl font-bold text-red-700 mb-2">Erro na simulação</h2>
+        <pre id="erroText" class="text-sm text-red-700 whitespace-pre-wrap"></pre>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('formSimulacao');
+    const btn = document.getElementById('btnSimular');
+    const statusBox = document.getElementById('statusBox');
+    const statusText = document.getElementById('statusText');
+    const resultadoBox = document.getElementById('resultadoBox');
+    const erroBox = document.getElementById('erroBox');
+    const erroText = document.getElementById('erroText');
+
+    const formatarNumero = (valor) => {
+        if (valor === null || valor === undefined) return '-';
+
+        return Number(valor).toLocaleString('pt-BR', {
+            maximumFractionDigits: 3
+        });
+    };
+
+    function mostrarStatus(texto) {
+        statusBox.classList.remove('hidden');
+        statusText.textContent = texto;
+    }
+
+    function limparResultado() {
+        resultadoBox.classList.add('hidden');
+        erroBox.classList.add('hidden');
+        erroText.textContent = '';
+    }
+
+    function preencherResultado(result) {
+        document.getElementById('co2Media').textContent = formatarNumero(result.co2.media);
+        document.getElementById('co2Provavel').textContent = formatarNumero(result.co2.provavel);
+        document.getElementById('co2Max').textContent = formatarNumero(result.co2.max);
+
+        document.getElementById('noxMedia').textContent = formatarNumero(result.nox.media);
+        document.getElementById('noxProvavel').textContent = formatarNumero(result.nox.provavel);
+        document.getElementById('noxMax').textContent = formatarNumero(result.nox.max);
+
+        document.getElementById('mpMedia').textContent = formatarNumero(result.mp.media);
+        document.getElementById('mpProvavel').textContent = formatarNumero(result.mp.provavel);
+        document.getElementById('mpMax').textContent = formatarNumero(result.mp.max);
+
+        resultadoBox.classList.remove('hidden');
+    }
+
+    async function consultarJob(jobId) {
+        const response = await fetch(`/api/simulacao/jobs/${jobId}`);
+        return response.json();
+    }
+
+    function iniciarPolling(jobId) {
+        const intervalo = setInterval(async () => {
+            try {
+                const job = await consultarJob(jobId);
+
+                if (job.status === 'running' || job.status === 'queued') {
+                    mostrarStatus(`Simulação em andamento... Job: ${jobId}`);
+                    return;
+                }
+
+                if (job.status === 'done') {
+                    clearInterval(intervalo);
+                    mostrarStatus('Simulação concluída com sucesso.');
+                    preencherResultado(job.result);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-play text-xs mr-2"></i> Executar Simulação';
+                    return;
+                }
+
+                if (job.status === 'error') {
+                    clearInterval(intervalo);
+                    mostrarStatus('Simulação finalizada com erro.');
+                    erroBox.classList.remove('hidden');
+                    erroText.textContent = job.error || 'Erro desconhecido.';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-play text-xs mr-2"></i> Executar Simulação';
+                }
+            } catch (error) {
+                clearInterval(intervalo);
+                mostrarStatus('Erro ao consultar o job.');
+                erroBox.classList.remove('hidden');
+                erroText.textContent = error.message;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play text-xs mr-2"></i> Executar Simulação';
+            }
+        }, 1500);
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        limparResultado();
+
+        const onibus = Number(document.getElementById('onibus').value);
+        const dias = Number(document.getElementById('dias').value);
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Executando...';
+
+        mostrarStatus('Criando job de simulação...');
+
+        try {
+            const response = await fetch('/api/simulacao/jobs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ onibus, dias }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao criar job de simulação.');
+            }
+
+            mostrarStatus(`Job criado: ${data.jobId}`);
+            iniciarPolling(data.jobId);
+        } catch (error) {
+            mostrarStatus('Erro ao iniciar a simulação.');
+            erroBox.classList.remove('hidden');
+            erroText.textContent = error.message;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-play text-xs mr-2"></i> Executar Simulação';
+        }
+    });
+</script>

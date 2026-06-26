@@ -5,6 +5,7 @@ const fs = require('fs');
 const ejs = require('ejs');
 const path = require('path');
 const mongoose = require('mongoose');
+const SimulacaoJobService = require('../../api/services/SimulacaoJobService');
 
 class AdminPageController {
 
@@ -210,6 +211,26 @@ class AdminPageController {
       return res.status(500).send('Erro: ' + error.message);
     }
   }
+
+  async renderSimulacao(req, res) {
+  try {
+    const simulationStatus = SimulacaoJobService.getSimulationStatus();
+
+    const currentUser = req.user || {
+      nome: "Admin",
+      avatar: "/images/avatars/admin-avatar.svg",
+    };
+
+    return res.render('admin/pages/simulation/simulacao', {
+      user: currentUser,
+      pageTitle: 'Simulação Monte Carlo',
+      simulationStatus,
+    });
+  } catch (err) {
+    console.error("Erro ao carregar página de simulação:", err);
+    return res.status(500).send("Erro ao carregar a página de simulação.");
+  }
+}
 }
 
 module.exports = new AdminPageController();
