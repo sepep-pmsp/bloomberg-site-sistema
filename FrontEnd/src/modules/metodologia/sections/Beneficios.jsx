@@ -52,7 +52,8 @@ export default function Beneficios() {
                     </section>
                 </div>
                 <span className='h-1 w-full bg-white'style={{ maxWidth: "1420px", margin: "0 auto" }}></span>
-                <section className='!flex flex-col xl:flex-row items-center justify-center gap-8 xl:gap-12 w-full my-8'>
+                <section className='!flex flex-col items-start justify-center gap-8 xl:gap-12 w-full my-12' style={{ maxWidth: "1420px", margin: "0 auto" }}>
+                    <h3 className='w-full mt-8 text-white !text-xl lg:!text-4xl'>EVOLUÇÃO DA FROTA DE ÔNIBUS ELÉTRICOS</h3>
                     <img src={Maps} alt="" />
                 </section>
             </div>
