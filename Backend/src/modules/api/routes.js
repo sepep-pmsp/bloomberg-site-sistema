@@ -4,6 +4,7 @@ const LoginController = require('./controllers/login/LoginController');
 const ForgotPasswordController = require('./controllers/login/ForgotPasswordController');
 const ProfileController = require('./controllers/profile/ProfileController');
 const authMiddleware = require('./middlewares/auth');
+const SimulacaoJobService = require("./services/SimulacaoJobService");
 const fs = require('fs');
 const path = require('path');
 
@@ -69,6 +70,58 @@ apiRoutes.get('/simulacao', (req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Erro interno na simulação." });
     }
+});
+
+apiRoutes.post("/simulacao/jobs", (req, res) => {
+  try {
+    const { onibus, dias } = req.body;
+
+    const qtdOnibus = Number(onibus);
+    const qtdDias = Number(dias);
+
+    if (!Number.isInteger(qtdOnibus) || qtdOnibus <= 0 || qtdOnibus > 1000) {
+      return res.status(400).json({
+        error: "O número de ônibus deve ser um inteiro entre 1 e 1000.",
+      });
+    }
+
+    if (!Number.isInteger(qtdDias) || qtdDias <= 0 || qtdDias > 365) {
+      return res.status(400).json({
+        error: "O número de dias deve ser um inteiro entre 1 e 365.",
+      });
+    }
+
+    const job = SimulacaoJobService.createJob({
+      onibus: qtdOnibus,
+      dias: qtdDias,
+    });
+
+    return res.status(202).json({
+      jobId: job.jobId,
+      status: job.status,
+      pollingUrl: `/api/simulacao/jobs/${job.jobId}`,
+    });
+  } catch (err) {
+    console.error("Erro ao criar job de simulação:", err);
+
+    return res.status(500).json({
+      error: "Erro ao criar job de simulação.",
+    });
+  }
+});
+
+apiRoutes.get("/simulacao/jobs/:jobId", (req, res) => {
+  const { jobId } = req.params;
+
+  const job = SimulacaoJobService.getJob(jobId);
+
+  if (!job) {
+    return res.status(404).json({
+      error: "Job de simulação não encontrado.",
+    });
+  }
+
+  return res.json(job);
 });
 
 // --- ROTAS PROTEGIDAS (PRECISA DE LOGIN) ---
