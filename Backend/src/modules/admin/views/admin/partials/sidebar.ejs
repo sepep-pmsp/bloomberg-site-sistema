@@ -9,25 +9,21 @@
 
     <nav class="flex-1 mt-4 px-4 space-y-2 overflow-y-auto">
         <a href="/admin/dashboard-view" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
-            <i class="fas fa-chart-line w-6"></i> Dashboard
+            <i class="fas fa-chart-line w-6 pr-2"></i> Dashboard
         </a>
         <a href="/admin/users-view" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
-            <i class="fas fa-users w-6"></i> Usuários
+            <i class="fas fa-users w-6 pr-2"></i> Usuários
         </a>
         <a href="/admin/monitor-view" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
-            <i class="fas fa-server w-6"></i> Monitor API
+            <i class="fas fa-server w-6 pr-2"></i> Monitor API
         </a>
         <a href="/admin/docs" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
-            <i class="fas fa-terminal w-6"></i> Integração & Dados
+            <i class="fas fa-terminal w-6 pr-2"></i> Integração & Dados
         </a>
-        <a href="/admin/simulation/simulacao" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
-            <i class="fas fa-calculator w-6"></i> Simulação
-        </a>
-
         <div>
             <button onclick="toggleMenu('submenu-metodologia')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#0F3D17] transition focus:outline-none">
                 <div class="flex items-center">
-                    <i class="fas fa-pen w-6"></i> 
+                    <i class="fa-regular fa-chart-bar w-6 pr-2"></i> 
                     <span>Metodologia</span>
                 </div>
                 <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="arrow-metodologia"></i>
@@ -48,7 +44,30 @@
                 </a>
             </div>
         </div>
-        </nav>
+        <div>
+            <button onclick="toggleMenuCenario('submenu-cenarios')" class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[#0F3D17] transition focus:outline-none">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-chart-pie w-6 pr-2"></i> Cenário Atual
+                </div>
+                <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="arrow-cenarios"></i>
+            </button>
+            
+            <div id="submenu-cenarios" class="hidden pl-8 space-y-1 mt-1">
+                <a href="/admin/pages/cenarios/mapa" class="block p-2 text-sm text-green-100 hover:text-white hover:bg-green-800 rounded transition">
+                    <i class="fa-solid fa-map-location-dot mr-1"></i> Mapa Interativo
+                </a>
+                <a href="/admin/pages/cenarios/rankeamento-up" class="block p-2 text-sm text-green-100 hover:text-white hover:bg-green-800 rounded transition">
+                    <i class="fa-solid fa-chart-line mr-1"></i> Ranking dos mais poluentes
+                </a>
+                <a href="/admin/pages/cenarios/rankeamento-down" class="block p-2 text-sm text-green-100 hover:text-white hover:bg-green-800 rounded transition">
+                    <i class="fa-solid fa-chart-gantt mr-1"></i> Ranking dos menos poluentes
+                </a>
+            </div>
+        </div>
+        <a href="/admin/simulation/simulacao" class="flex items-center p-3 rounded-lg hover:bg-[#0F3D17] transition">
+            <i class="fa-solid fa-chart-line w-6 pr-2"></i> Simulação
+        </a>
+    </nav>
 
     <div class="p-4 border-t border-[#0A290F]">
         <a href="/admin/logout" class="flex items-center p-3 text-red-400 hover:bg-red-900/20 rounded-lg transition">
@@ -68,6 +87,18 @@
         } else {
             menu.classList.add('hidden');
             arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+    function toggleMenuCenario(menuIdCenario){
+        const cenario = document.getElementById(menuIdCenario);
+        const arrowC = document.getElementById('arrow-cenarios');
+        
+        if (cenario.classList.contains('hidden')) {
+            cenario.classList.remove('hidden');
+            arrowC.style.transform = 'rotate(180deg)';
+        } else {
+            cenario.classList.add('hidden');
+            arrowC.style.transform = 'rotate(0deg)';
         }
     }
 </script>

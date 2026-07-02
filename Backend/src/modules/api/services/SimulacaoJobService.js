@@ -13,33 +13,33 @@ function scheduleJobCleanup(jobId) {
 }
 
 function getSimulationPaths() {
-    const localVenvPython = path.resolve(
-        __dirname,
-        "../../../../engine/venv/Scripts/python.exe"
-    );
+  const localVenvPython = path.resolve(
+    __dirname,
+    "../../../../engine/venv/Scripts/python.exe"
+  );
 
-    const dockerVenvPython = path.resolve(
-        __dirname,
-        "../../../../engine/venv/bin/python"
-    );
+  const dockerVenvPython = path.resolve(
+    __dirname,
+    "../../../../engine/venv/bin/python"
+  );
 
-    let pythonBin = process.env.PYTHON_BIN;
+  let pythonBin = process.env.PYTHON_BIN;
 
-    if (!pythonBin && fs.existsSync(localVenvPython)) {
-        pythonBin = localVenvPython;
-    }
+  if (!pythonBin && fs.existsSync(localVenvPython)) {
+    pythonBin = localVenvPython;
+  }
 
-    if (!pythonBin && fs.existsSync(dockerVenvPython)) {
-        pythonBin = dockerVenvPython;
-    }
+  if (!pythonBin && fs.existsSync(dockerVenvPython)) {
+    pythonBin = dockerVenvPython;
+  }
 
-    if (!pythonBin) {
-        pythonBin = "python";
-    }
+  if (!pythonBin) {
+    pythonBin = "python";
+  }
 
   const scriptPath = path.resolve(
     __dirname,
-    "../../../../engine/data_pipeline/simulation/teste_de_argparse.py"
+    "../../../../engine/data_pipeline/simulation/simMonteCarlo_v2_api.py"
   );
 
   const csvPath = path.resolve(
@@ -57,12 +57,18 @@ function getSimulationPaths() {
 function getSimulationStatus() {
   const { pythonBin, scriptPath, csvPath } = getSimulationPaths();
 
+  const csvEncontrado = fs.existsSync(csvPath);
+  const csvStats = csvEncontrado ? fs.statSync(csvPath) : null;
+
   return {
     modo: "simulacao-dinamica",
     salvaHistorico: false,
     pythonConfigurado: Boolean(pythonBin),
     scriptEncontrado: fs.existsSync(scriptPath),
-    csvEncontrado: fs.existsSync(csvPath),
+    csvEncontrado,
+    csvNome: path.basename(csvPath),
+    csvTamanhoMB: csvStats ? (csvStats.size / (1024 * 1024)).toFixed(2) : null,
+    csvAtualizadoEm: csvStats ? csvStats.mtime : null,
     pythonBin,
     scriptPath,
     csvPath,
@@ -178,4 +184,5 @@ module.exports = {
   createJob,
   getJob,
   getSimulationStatus,
+  getSimulationPaths,
 };

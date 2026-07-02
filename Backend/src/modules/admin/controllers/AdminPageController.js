@@ -6,6 +6,7 @@ const ejs = require('ejs');
 const path = require('path');
 const mongoose = require('mongoose');
 const SimulacaoJobService = require('../../api/services/SimulacaoJobService');
+const SimulationCsvService = require('../services/SimulationCsvService');
 
 class AdminPageController {
 
@@ -212,25 +213,42 @@ class AdminPageController {
     }
   }
 
-  async renderSimulacao(req, res) {
-  try {
-    const simulationStatus = SimulacaoJobService.getSimulationStatus();
+    async renderSimulacao(req, res) {
+        try {
+        const simulationStatus = SimulacaoJobService.getSimulationStatus();
 
-    const currentUser = req.user || {
-      nome: "Admin",
-      avatar: "/images/avatars/admin-avatar.svg",
-    };
+        const currentUser = req.user || {
+            nome: "Admin",
+            avatar: "/images/avatars/admin-avatar.svg",
+        };
 
-    return res.render('admin/pages/simulation/simulacao', {
-      user: currentUser,
-      pageTitle: 'Simulação Monte Carlo',
-      simulationStatus,
-    });
-  } catch (err) {
-    console.error("Erro ao carregar página de simulação:", err);
-    return res.status(500).send("Erro ao carregar a página de simulação.");
+        return res.render('admin/pages/simulation/simulacao', {
+            user: currentUser,
+            pageTitle: 'Simulação Monte Carlo',
+            simulationStatus,
+            uploadSuccess: req.query.uploadSuccess === '1',
+            uploadError: req.query.uploadError || null,
+        });
+        } catch (err) {
+        console.error("Erro ao carregar página de simulação:", err);
+        return res.status(500).send("Erro ao carregar a página de simulação.");
+        }
+    }
+
+  async uploadSimulationCsv(req, res) {
+    try {
+      SimulationCsvService.replaceSimulationCsv(req.file);
+
+      return res.redirect('/admin/simulation/simulacao?uploadSuccess=1');
+    } catch (err) {
+      console.error('Erro ao substituir CSV da simulação:', err);
+
+      return res.redirect(
+        '/admin/simulation/simulacao?uploadError=' +
+        encodeURIComponent(err.message || 'Erro ao substituir CSV da simulação.')
+      );
+    }
   }
-}
 }
 
 module.exports = new AdminPageController();

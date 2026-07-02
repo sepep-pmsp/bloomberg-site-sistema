@@ -38,7 +38,7 @@ def simMonteCarlo(df_consume_tabele, Y, days, N=2000):
 
     sim_emissions_co2 = np.random.choice(emissions_pool_co2, size=shape, replace=True)
     sim_emissions_nox = np.random.choice(emissions_pool_nox, size=shape, replace=True)
-    sim_emissions_mp = np.random.choice(emissions_pool_mp, size=shape, replace=True)
+    sim_emissions_mp  = np.random.choice(emissions_pool_mp, size=shape, replace=True)
 
     daily_emissions_co2 = sim_emissions_co2.sum(axis=2)
     daily_emissions_nox = sim_emissions_nox.sum(axis=2)
@@ -68,6 +68,7 @@ def simMonteCarlo(df_consume_tabele, Y, days, N=2000):
         }
     }
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--onibus", type=int, required=True)
@@ -84,19 +85,26 @@ def main():
             raise ValueError("O número de ônibus deve estar entre 1 e 1000.")
         if args.dias <= 0 or args.dias > 365:
             raise ValueError("O número de dias deve estar entre 1 e 365.")
-        
+
         # Leitura dos dados e pré-processamento
         df = pd.read_csv(args.csv)
+
+        # Conversão das emissões brutas para toneladas.
+        # O CSV de entrada vem com emissao_co2, emissao_nox e emissao_mp.
+        # A simulação usa as colunas emissao_co2(t), emissao_nox(t) e emissao_mp(t).
+        df['emissao_co2(t)'] = df['emissao_co2'] / 1000
+        df['emissao_nox(t)'] = df['emissao_nox'] / 1000
+        df['emissao_mp(t)'] = df['emissao_mp'] / 1000
+
         df['distancia_percorrida'] = df['distancia_percorrida'] / 1000  # Convertendo de metros para quilômetros, ajuste conforme a unidade original da coluna
         df = df[df['distancia_percorrida'] >= 15 ]  # Filtrando para considerar apenas os ônibus que percorreram mais de 15 km, ajuste conforme a necessidade do seu cenário# Filtrando registros com distância percorrida maior que zero
         df = remove_outliers_mad(df, 'emissao_co2(t)')
         df = remove_outliers_mad(df, 'emissao_nox(t)')
         df = remove_outliers_mad(df, 'emissao_mp(t)')
-        
 
         # Execução
         resultado = simMonteCarlo(df_consume_tabele=df, Y=args.onibus, days=args.dias, N=2000)
-        
+
         resposta["sucesso"] = True
         resposta["dados"] = resultado
 
@@ -107,3 +115,7 @@ def main():
 
     # O print final é SEMPRE um JSON válido, facilitando a vida do Front/Back-end
     print(json.dumps(resposta, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()
