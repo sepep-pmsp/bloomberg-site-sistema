@@ -64,7 +64,7 @@ export default function Navbar() {
                 <img className='w-50' src={prefeitura} alt="Logo da Prefeitura de São Paulo - Governo" />
                 <img className='w-60' src={Johns} alt="Logo da Johns Hopkins - University" />
             </section>
-            <section className='absolute left-0 w-full h-20 !flex justify-center lg:justify-end items-start flex-row flex-nowrap pt-4 lg:-left-8 z-50'>
+            <section className='absolute left-0 w-full h-20 !flex justify-center lg:justify-end items-start flex-row flex-nowrap pt-16 lg:-left-8 z-50'>
                 <img src={SPMaisVerde} alt="" />
             </section>
         </nav>

@@ -1,52 +1,80 @@
-import { API_BASE_URL } from '../../../service/ConfigApi';
+const GOLD_BASE_PATH = "/gold";
 
-// 1. Busca os dados para a tabela principal (ID, Modelo, Linha, Emissões...)
-export const getFrotaData = async () => {
+const DATA_FILES = {
+    mediasReferencia: "medias-diarias-referencia_2026-06-30_gold.json",
+    totalSp: "distrito-sp-total_2026-06-30_gold.json",
+    onibusDiesel: "onibus_diesel_diario_2026-06-30_gold.json",
+    onibusEletricos: "onibus_eletricos_diario_2026-06-30_gold.json",
+    distritoDiesel: "distrito-diesel_2026-06-30_gold.geojson",
+    distritoEletricos: "distrito-eletricos_2026-06-30_gold.geojson",
+};
+
+async function fetchGoldFile(fileName) {
+    const response = await fetch(`${GOLD_BASE_PATH}/${fileName}`);
+
+    if (!response.ok) {
+        throw new Error(`Erro ao buscar arquivo estático: ${fileName}`);
+    }
+
+    return response.json();
+}
+
+export const getFrotaData = async (variant = "plus") => {
     try {
-        const response = await fetch(`${API_BASE_URL}/json_final`);
-        if (!response.ok) throw new Error('Erro ao buscar dados da frota');
-        return await response.json();
+        const fileName = variant === "minus"
+            ? DATA_FILES.onibusEletricos
+            : DATA_FILES.onibusDiesel;
+
+        return await fetchGoldFile(fileName);
     } catch (error) {
         console.error("Erro em getFrotaData:", error);
         return [];
     }
 };
 
-// 2. Busca os dados de Totais (KPIs do topo: Total patrimonial, Elétricos, etc)
+export const getMediasReferencia = async () => {
+    try {
+        const data = await fetchGoldFile(DATA_FILES.mediasReferencia);
+        return data?.[0] || null;
+    } catch (error) {
+        console.error("Erro em getMediasReferencia:", error);
+        return null;
+    }
+};
+
 export const getTotaisData = async () => {
     try {
-        const response = await fetch(`${API_BASE_URL}/totais-gerais`);
-        if (!response.ok) throw new Error('Erro ao buscar totais gerais');
-        return await response.json();
+        return await fetchGoldFile(DATA_FILES.totalSp);
     } catch (error) {
         console.error("Erro em getTotaisData:", error);
         return null;
     }
 };
 
-// --- Funções Futuras (Para o Modal e Mapa) ---
-
-// 3. Busca o GeoJSON das Rotas (Linhas no mapa)
-export const getFrotaRotas = async () => {
+export const getDistritosData = async (tipologia = "emissao") => {
     try {
-        const response = await fetch(`${API_BASE_URL}/frota-rotas`);
-        if (!response.ok) throw new Error('Erro ao buscar rotas');
-        return await response.json();
+        const fileName = tipologia === "evitada"
+            ? DATA_FILES.distritoEletricos
+            : DATA_FILES.distritoDiesel;
+
+        return await fetchGoldFile(fileName);
     } catch (error) {
-        console.error("Erro em getFrotaRotas:", error);
+        console.error("Erro em getDistritosData:", error);
         return null;
     }
 };
 
-// 4. Busca o JSON dos Distritos (Mapa Colorido)
-export const getDistritosData = async () => {
+export const getFrotaRotas = async () => {
     try {
-        // Ajuste a URL abaixo para a rota correta onde o seu admin salva o mapas_distritos.json
-        const response = await fetch(`${API_BASE_URL}/mapas_distritos.json`); 
-        if (!response.ok) throw new Error('Erro ao buscar dados dos distritos');
-        return await response.json();
+        const response = await fetch("/frota_rotas.geojson");
+
+        if (!response.ok) {
+            throw new Error("Erro ao buscar rotas");
+        }
+
+        return response.json();
     } catch (error) {
-        console.error("Erro em getDistritosData:", error);
+        console.error("Erro em getFrotaRotas:", error);
         return null;
     }
 };

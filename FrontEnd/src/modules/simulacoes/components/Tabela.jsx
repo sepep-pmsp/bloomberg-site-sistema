@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { clsx } from 'clsx';
 import ModalTrajeto from '../../dados/components/Dados/Mapa/ModalTrajeto';
 
-const API_BASE_URL = 'http://10.80.14.29:3001/api';
+const GOLD_BASE_PATH = "/gold";
 
 const parseNumber = (val) => {
     if (val === "nan" || val == null) return 0;
@@ -17,28 +17,28 @@ export default function Tabela() {
     useEffect(() => {
         async function load() {
             try {
-                const response = await fetch(`${API_BASE_URL}/json_final`);
-                if (!response.ok) throw new Error("Falha ao buscar json_final");
+                const response = await fetch(`${GOLD_BASE_PATH}/onibus_diesel_diario_2026-06-30_gold.json`);
+                if (!response.ok) throw new Error("Falha ao buscar onibus_diesel_diario");
 
                 const rawData = await response.json();
 
                 const normalizedData = rawData.map(item => {
-                    const co2 = parseNumber(item.emissao_co2);
-                    const mp = parseNumber(item.emissao_mp);
-                    const nox = parseNumber(item.emissao_nox);
+                    const co2 = parseNumber(item.co2_kg);
+                    const mp = parseNumber(item.mp_kg);
+                    const nox = parseNumber(item.nox_kg);
                     const scorePoluicao = co2 + mp + nox;
 
                     return {
                         id_onibus: item.codigo_onibus,
-                        linha: item.random_linhas || "Sem Linha",
-                        modelo: item.tecnologia || "Desconhecido",
-                        idade: item.ano_fabricacao || "Desconhecido",
-                        km_rodados: parseNumber(item.distancia_percorrida) / 1000,
-                        co2, mp, nox, scorePoluicao,
-                        populacao_afetada: Math.max(
-                            parseNumber(item.random_pop_afetada_mp),
-                            parseNumber(item.random_pop_afetada_nox)
-                        ),
+                        linha: item.codigo_onibus,
+                        modelo: item.modelo || item.tecnologia || "Desconhecido",
+                        idade: item.ano_modelo || "Desconhecido",
+                        km_rodados: parseNumber(item.distancia_km),
+                        co2,
+                        mp,
+                        nox,
+                        scorePoluicao,
+                        populacao_afetada: null,
                         geometry: item.geometry
                     };
                 });
@@ -78,7 +78,7 @@ export default function Tabela() {
                                     <tr>
                                         <th className="px-4 py-4 text-left font-normal whitespace-nowrap">Idade do ônibus <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
                                         <th className="px-4 py-4 text-left font-normal">Modelo <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
-                                        <th className="px-4 py-4 text-left font-normal">Linha <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
+                                        <th className="px-4 py-4 text-left font-normal">Ônibus <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
                                         <th className="px-4 py-4 text-left font-normal whitespace-nowrap">Kms Rodados <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
                                         <th className="px-4 py-4 text-left font-normal whitespace-nowrap">População Afetada <i className="fa fa-angle-down text-gray-300 ml-1"></i></th>
                                         {!selectedBus && (
@@ -105,7 +105,7 @@ export default function Tabela() {
                                                 <td className="px-6 py-4" style={{ fontFamily: 'var(--font-heading-secondary)' }}><span className={lineBadgeClass}>{item.linha}</span></td>
                                                 <td className="px-6 py-4 text-gray-700" style={{ fontFamily: 'var(--font-heading-secondary)' }}>{fmtPop(item.km_rodados)}</td>
                                                 <td className="px-6 py-4" style={{ fontFamily: 'var(--font-heading-secondary)' }}>
-                                                    <span className={badgePopClass}>{fmtPop(item.populacao_afetada)}</span>
+                                                    <span className={badgePopClass}></span>
                                                 </td>
                                                 {!selectedBus && (
                                                     <>

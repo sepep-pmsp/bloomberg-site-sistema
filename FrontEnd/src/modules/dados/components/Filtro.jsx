@@ -1,97 +1,114 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import FiltrosFrota from './Shared/Tabela/FiltrosFrota';
-import { getFrotaData } from '../service/DadosService';
+import { getFrotaData, getMediasReferencia } from '../service/DadosService';
 import TabelaFrota from './Shared/Tabela/TabelaFrota';
 
 const parseNumber = (val) => {
-    if (val === "nan" || val == null) return 0;
+    if (val === 'nan' || val == null) return 0;
     const num = Number(val);
     return isNaN(num) ? 0 : num;
 };
 
-export default function Filtro({ variant = "plus" }) {
+export default function Filtro({ variant = 'plus' }) {
     const [rawData, setRawData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [popBounds, setPopBounds] = useState({ min: 0, max: 2000000 });
+    const [mediasReferencia, setMediasReferencia] = useState(null);
 
     const [filters, setFilters] = useState({
-        populacaoMin: 0,
         linha: '',
-        modelo: ''
+        modelo: '',
     });
 
     useEffect(() => {
         async function load() {
             try {
-                const data = await getFrotaData();
-                
-                const normalizedData = data.map(item => ({
-                    id_onibus: item.codigo_onibus,
-                    linha: item.random_linhas || "Sem Linha",
-                    modelo: item.tecnologia || "Desconhecido",
-                    km_rodados: parseNumber(item.distancia_percorrida) / 1000,
-                    co2: parseNumber(item.emissao_co2),
-                    mp: parseNumber(item.emissao_mp),
-                    nox: parseNumber(item.emissao_nox),
-                    populacao_afetada: Math.max(
-                        parseNumber(item.random_pop_afetada_mp), 
-                        parseNumber(item.random_pop_afetada_nox)
-                    ),
-                    geometry: item.geometry
-                }));
-                if (normalizedData.length > 0) {
-                    const minPop = Math.min(...normalizedData.map(d => d.populacao_afetada));
-                    const maxPop = Math.max(...normalizedData.map(d => d.populacao_afetada));
-                    
-                    setPopBounds({ min: minPop, max: maxPop });
-                    setFilters(prev => ({ ...prev, populacaoMin: minPop }));
-                }
+                setLoading(true);
+
+                const [data, medias] = await Promise.all([
+                    getFrotaData(variant),
+                    getMediasReferencia(),
+                ]);
+
+                setMediasReferencia(medias);
+
+                const normalizedData = data
+                    .map(item => {
+                        const co2 = parseNumber(item.co2_kg);
+                        const mp = parseNumber(item.mp_kg);
+                        const nox = parseNumber(item.nox_kg);
+                        const kmRodados = parseNumber(item.distancia_km);
+
+                        return {
+                            id_onibus: item.codigo_onibus,
+                            linha: item.linha || 'Sem Linha',
+                            modelo: item.modelo || item.tecnologia || 'Desconhecido',
+                            idade: item.ano_modelo || item.ano_fabricacao || 'Desconhecido',
+                            km_rodados: kmRodados,
+                            co2,
+                            mp,
+                            nox,
+                            scorePoluicao: co2 + mp + nox,
+                            populacao_afetada: null,
+                            geometry: item.geometry || null,
+                        };
+                    })
+                    .filter(item => item.co2 > 0 || item.mp > 0 || item.nox > 0 || item.km_rodados > 0);
+
                 setRawData(normalizedData);
             } catch (error) {
-                console.error("Erro ao processar dados da frota", error);
+                console.error('Erro ao processar dados da frota', error);
             } finally {
                 setLoading(false);
             }
         }
+
         load();
-    }, []);
+    }, [variant]);
 
     const uniqueLines = useMemo(() =>
         [...new Set(rawData.map(d => d.linha))].filter(Boolean).sort(),
-        [rawData]);
+        [rawData]
+    );
 
     const uniqueModels = useMemo(() =>
         [...new Set(rawData.map(d => d.modelo))].filter(Boolean).sort(),
-        [rawData]);
+        [rawData]
+    );
 
     const filteredData = useMemo(() => {
         return rawData.filter(item => {
-            if ((item.populacao_afetada || 0) < filters.populacaoMin) return false;
-
             if (filters.linha && item.linha !== filters.linha) return false;
             if (filters.modelo && item.modelo !== filters.modelo) return false;
-
             return true;
         });
     }, [rawData, filters]);
 
     const stats = useMemo(() => {
-        if (rawData.length === 0) return { co2: 0, nox: 0, mp: 0, populacao: 0 };
+        if (mediasReferencia) {
+            return {
+                co2: parseNumber(mediasReferencia.co2_dia),
+                nox: parseNumber(mediasReferencia.nox_dia),
+                mp: parseNumber(mediasReferencia.mp_dia),
+                populacao: null,
+            };
+        }
+
+        if (rawData.length === 0) return { co2: 0, nox: 0, mp: 0, populacao: null };
+
         const total = rawData.length;
-        const sum = rawData.reduce((acc, curr) => ({ 
+        const sum = rawData.reduce((acc, curr) => ({
             co2: acc.co2 + (curr.co2 || 0),
             nox: acc.nox + (curr.nox || 0),
             mp: acc.mp + (curr.mp || 0),
-            pop: acc.pop + (curr.populacao_afetada || 0)
-        }), { co2: 0, nox: 0, mp: 0, pop: 0 });
+        }), { co2: 0, nox: 0, mp: 0 });
 
         return {
             co2: sum.co2 / total,
             nox: sum.nox / total,
             mp: sum.mp / total,
-            populacao: sum.pop / total 
+            populacao: null,
         };
-    }, [rawData]);
+    }, [rawData, mediasReferencia]);
 
     return (
         <div className="min-h-screen pt-32 pb-20 px-4 md:px-12">
@@ -106,10 +123,9 @@ export default function Filtro({ variant = "plus" }) {
                         uniqueLines={uniqueLines}
                         uniqueModels={uniqueModels}
                         stats={stats}
-                        popBounds={popBounds}
                     />
 
-                    <TabelaFrota variant={variant} data={filteredData} stats={stats}/>
+                    <TabelaFrota variant={variant} data={filteredData} stats={stats} />
                 </>
             )}
         </div>

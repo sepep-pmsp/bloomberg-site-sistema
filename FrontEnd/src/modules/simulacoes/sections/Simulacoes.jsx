@@ -10,15 +10,30 @@ export default function Simulacoes() {
     const [simulacaoAtiva, setSimulacaoAtiva] = useState({ dias: 30, onibus: 15 });
     const [isFiltroAberto, setIsFiltroAberto] = useState(false);
     useEffect(() => {
-        const carregarDados = async () => {
-            const data = await fetchSimulacoesData();
-            setApiData(data);
-            setLoading(false);
-        };
-        carregarDados();
+    const carregarDadosIniciais = async () => {
+        setLoading(true);
+        const data = await fetchSimulacoesData({
+            onibus: simulacaoAtiva.onibus,
+            dias: simulacaoAtiva.dias,
+        });
+        setApiData(data);
+        setLoading(false);
+    };
+    carregarDadosIniciais();
     }, []);
-    const handleSimular = () => {
-        setSimulacaoAtiva({ dias: diasInput, onibus: onibusInput });
+    const handleSimular = async () => {
+        const novaSimulacao = {
+            dias: diasInput,
+            onibus: onibusInput,
+        };
+        setLoading(true);
+        setSimulacaoAtiva(novaSimulacao);
+        const data = await fetchSimulacoesData({
+            onibus: novaSimulacao.onibus,
+            dias: novaSimulacao.dias,
+        });
+        setApiData(data);
+        setLoading(false);
     };
 
     if (loading) { return <div className="min-h-screen flex items-center justify-center bg-[#F3FDF5] text-xl font-bold text-[#0A290F]">Carregando simulações da API...</div>; }
@@ -40,7 +55,7 @@ export default function Simulacoes() {
                         <input type="number" placeholder="Insira a quantidade de dias" className="p-3 rounded bg-[#EAF7EC] text-gray-800 outline-none focus:ring-2 focus:ring-[#0A290F] w-full md:w-64 placeholder:text-gray-500 text-sm" value={diasInput}onChange={(e) => setDiasInput(Number(e.target.value))}/>
                         <input type="number" placeholder="Insira a quantidade de ônibus" className="p-3 rounded bg-[#EAF7EC] text-gray-800 outline-none focus:ring-2 focus:ring-[#0A290F] w-full md:w-80 placeholder:text-gray-500 text-sm" value={onibusInput} onChange={(e) => setOnibusInput(Number(e.target.value))}/>
                     </div>
-                    <button onClick={() => { handleSimular(); setIsFiltroAberto(false);}} className="w-full md:w-[600px] bg-[#F3FDF5] text-[#0A290F] font-bold py-3 rounded hover:bg-white transition-colors shadow-sm">
+                    <button onClick={async () => { await handleSimular(); setIsFiltroAberto(false); }} className="w-full md:w-[600px] bg-[#F3FDF5] text-[#0A290F] font-bold py-3 rounded hover:bg-white transition-colors shadow-sm">
                        <h2>Executar Simulação</h2>
                     </button>
                 </div>
@@ -63,17 +78,17 @@ export default function Simulacoes() {
                         { label: 'CO₂ (t/dia)', val: dados.co2.media, isPop: false, colorLabel: '#2D4B39', colorData: '#719580' },
                         { label: 'NOx (t/dia)', val: dados.nox.media, isPop: false, colorLabel: '#22402F', colorData: '#6B8E7A' },
                         { label: 'MP (t/dia)', val: dados.mp.media, isPop: false, colorLabel: '#193626', colorData: '#658673' },
-                        { label: 'População resguardada', val: dados.pop.media, isPop: true, colorLabel: '#122D1F', colorData: '#5C7C6A' },
+                        { label: 'População resguardada', val: null, isPop: true, isBlank: true, colorLabel: '#122D1F', colorData: '#5C7C6A' },
                     ].map((row, idx) => (
                         <div key={idx} className="grid grid-cols-3 gap-2 h-20">
                             <div className="text-white text-xs font-semibold flex items-center justify-center py-4 px-2 rounded-xl text-center shadow-sm" style={{ backgroundColor: row.colorLabel }}>
                                 <h3 className='!font-normal'>{row.label}</h3>
                             </div>
                             <div className="text-[var(--green-800)] text-sm font-semibold flex items-center justify-center py-4 rounded-full shadow-sm" style={{ backgroundColor: row.colorData }}>
-                                <h3 className='!font-normal'>{row.isPop ? fmtPop(row.val) : fmtPoluente(row.val)}</h3>
+                                <h3 className='!font-normal'>{row.isBlank ? '' : row.isPop ? fmtPop(row.val) : fmtPoluente(row.val)}</h3>
                             </div>
                             <div className="text-[var(--green-800)] text-sm font-semibold flex items-center justify-center py-4 rounded-full shadow-sm" style={{ backgroundColor: row.colorData }}>
-                                <h3 className='!font-normal'>{row.isPop ? fmtPop(row.val * dias) : fmtPoluente(row.val * dias)}</h3>
+                                <h3 className='!font-normal'>{row.isBlank ? '' : row.isPop ? fmtPop(row.val * dias) : fmtPoluente(row.val * dias)}</h3>
                             </div>
                         </div>
                     ))}
@@ -91,11 +106,11 @@ export default function Simulacoes() {
                         { prov: dados.co2.provavel, max: dados.co2.max, isPop: false },
                         { prov: dados.nox.provavel, max: dados.nox.max, isPop: false },
                         { prov: dados.mp.provavel, max: dados.mp.max, isPop: false },
-                        { prov: dados.pop.provavel, max: dados.pop.max, isPop: true },
+                        { prov: null, max: null, isPop: true, isBlank: true },
                     ].map((row, idx) => (
                         <div key={idx} className="grid grid-cols-2 gap-4 px-2 h-20">
                             <div className="bg-[#C58079] text-[var(--green-800)] text-sm font-semibold flex items-center justify-center py-4 rounded-full shadow-sm ">
-                                <h3 className='!font-normal'>{row.isPop ? fmtPop(row.prov) : fmtPoluente(row.prov)}</h3>
+                                <h3 className='!font-normal'>{row.isPop ? fmtPop(row.max) : fmtPoluente(row.max)}</h3>
                             </div>
                             <div className="bg-[#89DEAE] text-[var(--green-800)] text-sm font-bold flex items-center justify-center py-4 rounded-full shadow-sm">
                                 <h3 className='!font-normal'>{row.isPop ? fmtPop(row.max) : fmtPoluente(row.max)}</h3>
