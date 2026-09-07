@@ -102,72 +102,236 @@ class AdminPageController {
     }
   }
 
-  async renderApiDocs(req, res) {
-    const contentPath = path.join(__dirname, '../../api/content');
-    const checkFile = (filename) => fs.existsSync(path.join(contentPath, filename));
-    const metodologiaOnline = await PageContent.exists({ page: 'metodologia' });
-        
-    const filesStatus = {
-        'frota_tabela.json': checkFile('frota_tabela.json'),
-        'frota_pontos.geojson': checkFile('frota_pontos.geojson'),
-        'frota_rotas.geojson': checkFile('frota_rotas.geojson'),
-        'mapas_distritos.json': checkFile('mapas_distritos.json'),
-        'simulacao_monte_carlo.json': checkFile('simulacao_monte_carlo.json'),
-        'mongodb_metodologia': !!metodologiaOnline
-    };
+ async renderApiDocs(req, res) {
+    try {
+        const contentPath = path.join(
+            __dirname,
+            '../../api/content'
+        );
 
-    const endpoints = [
-        { 
-            tag: 'CMS / Textos', 
-            method: 'GET', 
-            path: '/api/content/metodologia', 
-            desc: 'Retorna todos os textos dinâmicos (Banner, Cenários, Impactos, Reduções).', 
-            response: { 
-                banner_progress: { banner: { title: "..." } },
-                cenarios: { cards: [] },
-                impactos: { doc: "...", items: [] }
-            }, 
-            status: filesStatus['mongodb_metodologia']
-        },
-        { 
-             tag: 'Frota', method: 'GET', path: '/api/frota-tabela', 
-            desc: 'Retorna a lista completa de ônibus.', 
-            response: [{ id: 64460, linha: "502J-10" }], 
-            status: filesStatus['frota_tabela.json']
-        },
-        { 
-            tag: 'Geográfico', method: 'GET', path: '/api/frota-pontos', 
-            desc: 'GeoJSON com posições e calor.', 
-            response: { type: 'FeatureCollection' }, 
-            status: filesStatus['frota_pontos.geojson']
-        },
-        { 
-            tag: 'Geográfico', method: 'GET', path: '/api/frota-rotas', 
-            desc: 'GeoJSON com trajetos das linhas.', 
-            response: { type: 'FeatureCollection' }, 
-            status: filesStatus['frota_rotas.geojson']
-        },
-        { 
-            tag: 'Geográfico', method: 'GET', path: '/api/mapa-distritos', 
-            desc: 'Consolidado por distritos.', 
-            response: { "JABAQUARA": { co2: 15.4 } }, 
-            status: filesStatus['mapas_distritos.json']
-        },
-        { 
-            tag: 'Simulação', method: 'GET', path: '/api/simulacao', 
-            desc: 'Simulação Monte Carlo.', 
-            response: { cenario_50: { media: 0.008 } }, 
-            status: filesStatus['simulacao_monte_carlo.json']
-        }
-    ];
+        const checkFile = (filename) =>
+            fs.existsSync(
+                path.join(contentPath, filename)
+            );
 
-        return res.render('admin/pages/api-docs', {
-            endpoints,
-            filesStatus,
-            user: req.user || { nome: "Admin", avatar: "/images/avatars/admin-avatar.svg" },
-            title: 'Integração e Catálogo de Dados' 
+        // Verifica se existe conteúdo da metodologia no MongoDB
+        const metodologiaOnline = await PageContent.exists({
+            page: 'metodologia'
         });
-  }
+
+
+        // ======================================================
+        // STATUS DOS ARQUIVOS
+        // ======================================================
+
+        const filesStatus = {
+            'frota_tabela.json':
+                checkFile('frota_tabela.json'),
+
+            'frota_pontos.geojson':
+                checkFile('frota_pontos.geojson'),
+
+            'frota_rotas.geojson':
+                checkFile('frota_rotas.geojson'),
+
+            'mapas_distritos.json':
+                checkFile('mapas_distritos.json'),
+
+            'simulacao_monte_carlo.json':
+                checkFile('simulacao_monte_carlo.json'),
+
+            'mongodb_metodologia':
+                !!metodologiaOnline
+        };
+
+
+        // ======================================================
+        // CATÁLOGO DOS ENDPOINTS
+        // ======================================================
+
+        const endpoints = [
+
+            {
+                tag: 'CMS / Textos',
+                method: 'GET',
+                path: '/api/content/metodologia',
+
+                desc:
+                    'Retorna todos os textos dinâmicos ' +
+                    '(Banner, Cenários, Impactos, Reduções).',
+
+                response: {
+                    banner_progress: {
+                        banner: {
+                            title: "..."
+                        }
+                    },
+
+                    cenarios: {
+                        cards: []
+                    },
+
+                    impactos: {
+                        doc: "...",
+                        items: []
+                    }
+                },
+
+                status:
+                    filesStatus['mongodb_metodologia']
+            },
+
+
+            {
+                tag: 'Frota',
+                method: 'GET',
+                path: '/api/frota-tabela',
+
+                desc:
+                    'Retorna a lista completa de ônibus.',
+
+                response: [
+                    {
+                        id: 64460,
+                        linha: "502J-10"
+                    }
+                ],
+
+                status:
+                    filesStatus['frota_tabela.json']
+            },
+
+
+            {
+                tag: 'Geográfico',
+                method: 'GET',
+                path: '/api/frota-pontos',
+
+                desc:
+                    'GeoJSON com posições e calor.',
+
+                response: {
+                    type: 'FeatureCollection'
+                },
+
+                status:
+                    filesStatus['frota_pontos.geojson']
+            },
+
+
+            {
+                tag: 'Geográfico',
+                method: 'GET',
+                path: '/api/frota-rotas',
+
+                desc:
+                    'GeoJSON com trajetos das linhas.',
+
+                response: {
+                    type: 'FeatureCollection'
+                },
+
+                status:
+                    filesStatus['frota_rotas.geojson']
+            },
+
+
+            {
+                tag: 'Geográfico',
+                method: 'GET',
+                path: '/api/mapa-distritos',
+
+                desc:
+                    'Consolidado por distritos.',
+
+                response: {
+                    "JABAQUARA": {
+                        co2: 15.4
+                    }
+                },
+
+                status:
+                    filesStatus['mapas_distritos.json']
+            },
+
+
+            {
+                tag: 'Simulação',
+                method: 'GET',
+                path: '/api/simulacao',
+
+                desc:
+                    'Simulação Monte Carlo.',
+
+                response: {
+                    cenario_50: {
+                        media: 0.008
+                    }
+                },
+
+                status:
+                    filesStatus['simulacao_monte_carlo.json']
+            }
+        ];
+
+
+        // ======================================================
+        // USUÁRIO ATUAL
+        // ======================================================
+
+        const currentUser = req.user || {
+            nome: "Admin",
+            avatar: "/images/avatars/admin-avatar.svg"
+        };
+
+
+        // ======================================================
+        // RESULTADO DO UPLOAD JSON
+        // ======================================================
+
+        const uploadJsonSuccess =
+            req.query.uploadJsonSuccess === '1';
+
+        const uploadJsonError =
+            req.query.uploadJsonError || null;
+
+        const uploadedJson =
+            req.query.jsonFile || null;
+
+
+        // ======================================================
+        // RENDERIZA A PÁGINA
+        // ======================================================
+
+        return res.render(
+            'admin/pages/api-docs',
+            {
+                endpoints,
+                filesStatus,
+
+                user: currentUser,
+
+                title:
+                    'Integração e Catálogo de Dados',
+
+                uploadJsonSuccess,
+                uploadJsonError,
+                uploadedJson
+            }
+        );
+
+        } catch (err) {
+
+            console.error(
+                'Erro ao carregar Integração e Catálogo de Dados:',
+                err
+            );
+
+            return res.status(500).send(
+                'Erro ao carregar Integração e Catálogo de Dados.'
+            );
+        }
+    }
 
   async renderMetodologiaSection(req, res) {
     try {
